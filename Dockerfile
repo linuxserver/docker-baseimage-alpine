@@ -27,7 +27,7 @@ apk add --no-cache --repository http://nl.alpinelinux.org/alpine/edge/testing \
 
 # add s6 overlay
  curl -o \
-	/tmp/s6-overlay.tar.gz -L \
+ /tmp/s6-overlay.tar.gz -L \
 	"${OVERLAY_WWW}" && \
  tar xvfz /tmp/s6-overlay.tar.gz -C / && \
 
