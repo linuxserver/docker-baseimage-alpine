@@ -22,7 +22,7 @@ RUN \
 	bash \
 	tzdata && \
 
-apk add --no-cache --repository http://nl.alpinelinux.org/alpine/edge/testing \
+apk add --no-cache --repository http://nl.alpinelinux.org/alpine/edge/community \
 	shadow && \
 
 # add s6 overlay
