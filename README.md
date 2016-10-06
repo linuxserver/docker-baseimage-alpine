@@ -1,8 +1,14 @@
-![https://linuxserver.io](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver_medium.png)
+[linuxserverurl]: https://linuxserver.io
+[forumurl]: https://forum.linuxserver.io
+[ircurl]: https://www.linuxserver.io/index.php/irc/
+[podcasturl]: https://www.linuxserver.io/index.php/category/podcast/
 
 [Dockerfile](https://github.com/linuxserver/docker-baseimage-alpine/blob/master/Dockerfile)
 
 ### This base container is not aimed at public consumption. It exists to serve as a single endpoint for LinuxServer.io containers and is based upon [Alpine Linux](https://hub.docker.com/_/alpine/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
 
-If you want to comment\contribute to our work, feel free to join us at out irc channel:
-[IRC](https://www.linuxserver.io/index.php/irc/) on freenode at `#linuxserver.io` or visit our website at [https://linuxserver.io](https://linuxserver.io).
+If you want to comment\contribute to this image, are looking for support on any of our other work , or are curious about us in general, check out the following.
+
+* [forum.linuxserver.io][forumurl]
+* [IRC][ircurl] on freenode at `#linuxserver.io`
+* [Podcast][podcasturl] covers everything to do with getting the most from your Linux Server plus a focus on all things Docker and containerisation!
