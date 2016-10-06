@@ -3,6 +3,8 @@
 [ircurl]: https://www.linuxserver.io/index.php/irc/
 [podcasturl]: https://www.linuxserver.io/index.php/category/podcast/
 
+[![linuxserver.io](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver_medium.png)][linuxserverurl]
+
 [Dockerfile](https://github.com/linuxserver/docker-baseimage-alpine/blob/master/Dockerfile)
 
 ### This base container is not aimed at public consumption. It exists to serve as a single endpoint for LinuxServer.io containers and is based upon [Alpine Linux](https://hub.docker.com/_/alpine/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
