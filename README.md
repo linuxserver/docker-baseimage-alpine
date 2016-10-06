@@ -1,6 +1,6 @@
 [linuxserverurl]: https://linuxserver.io
 [forumurl]: https://forum.linuxserver.io
-[ircurl]: https://www.linuxserver.io/index.php/irc/
+[ircurl]: https://www.linuxserver.io/irc/
 [podcasturl]: https://www.linuxserver.io/index.php/category/podcast/
 
 [![linuxserver.io](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver_medium.png)][linuxserverurl]
