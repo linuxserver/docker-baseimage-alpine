@@ -17,6 +17,7 @@ RUN \
 	tar && \
  apk add --no-cache \
 	bash \
+	coreutils \
 	tzdata && \
  apk add --no-cache \
 	--repository http://nl.alpinelinux.org/alpine/edge/community \
