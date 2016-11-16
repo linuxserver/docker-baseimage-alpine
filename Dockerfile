@@ -1,4 +1,4 @@
-FROM gliderlabs/alpine:3.4
+FROM gliderlabs/alpine:edge
 MAINTAINER sparklyballs
 
 # set version for s6 overlay
@@ -18,10 +18,8 @@ RUN \
  apk add --no-cache \
 	bash \
 	coreutils \
+	shadow \
 	tzdata && \
- apk add --no-cache \
-	--repository http://nl.alpinelinux.org/alpine/edge/community \
-	shadow && \
 
 # add s6 overlay
  curl -o \
