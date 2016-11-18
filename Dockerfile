@@ -1,4 +1,4 @@
-FROM gliderlabs/alpine:edge
+FROM alpine:edge
 MAINTAINER sparklyballs
 
 # set version for s6 overlay
