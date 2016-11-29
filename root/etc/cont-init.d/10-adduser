@@ -2,9 +2,14 @@
 
 PUID=${PUID:-911}
 PGID=${PGID:-911}
+PGIDS=${PGIDS}
 
 groupmod -o -g "$PGID" abc
 usermod -o -u "$PUID" abc
+for TMP_GID in $PGIDS; do
+    groupadd -o -g $TMP_GID "g$TMP_GID"
+    usermod -a -G "g$TMP_GID" abc
+done
 
 echo "
 -------------------------------------
