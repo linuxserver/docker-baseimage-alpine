@@ -17,6 +17,7 @@ RUN \
 	tar && \
  apk add --no-cache \
 	bash \
+	ca-certificates \
 	coreutils \
 	tzdata && \
  apk add --no-cache \
