@@ -1,4 +1,6 @@
-FROM alpine:3.5
+FROM scratch
+ADD rootfs.tar.gz /
+
 MAINTAINER sparklyballs
 
 # set version for s6 overlay
