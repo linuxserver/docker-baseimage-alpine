@@ -10,6 +10,7 @@ ARG OVERLAY_ARCH="${OVERLAY_ARCH:-amd64}"
 ENV PS1="$(whoami)@$(hostname):$(pwd)$ " \
 HOME="/root" \
 TERM="xterm"
+ENV test="test"
 
 # install packages
 RUN \
