@@ -8,11 +8,15 @@ ARG OVERLAY_ARCH="${OVERLAY_ARCH:-amd64}"
 
 # environment variables
 ENV PS1="$(whoami)@$(hostname):$(pwd)$ " \
+PATH="/usr/local/bin:$PATH" \
 HOME="/root" \
 TERM="xterm"
 
-# install packages
+# copy busybox id to /usr/local/bin, coreutils (gnu) version of id, bug with group ids.
 RUN \
+ cp /usr/bin/id /usr/local/bin/id && \
+
+# install packages
  apk add --no-cache --virtual=build-dependencies \
 	curl \
 	tar && \
