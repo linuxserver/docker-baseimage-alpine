@@ -1,5 +1,5 @@
 FROM scratch
-ADD rootfs.tar.gz /
+ADD rootfs.tar.xz /
 
 MAINTAINER sparklyballs
 
