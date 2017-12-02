@@ -6,10 +6,11 @@ PGID=${PGID:-911}
 groupmod -o -g "$PGID" abc
 usermod -o -u "$PUID" abc
 
-echo '-------------------------------------
+echo '
+-------------------------------------
           _     _ _
          | |___| (_) ___
-         | / __| | |/ _ \
+         | / __| | |/ _ \ 
          | \__ \ | | (_) |
          |_|___/ |_|\___/
                |_|
@@ -19,12 +20,12 @@ We gratefully accept donations at:
 https://www.linuxserver.io/donations/
 -------------------------------------
 GID/UID
--------------------------------------
-'
+-------------------------------------'
 echo "
 User uid:    $(id -u abc)
 User gid:    $(id -g abc)
--------------------------------------"
+-------------------------------------
+"
 chown abc:abc /app
 chown abc:abc /config
 chown abc:abc /defaults
