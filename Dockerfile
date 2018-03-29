@@ -8,7 +8,7 @@ ARG OVERLAY_VERSION="v1.21.4.0"
 ARG OVERLAY_ARCH="amd64"
 
 # environment variables
-ENV PS1="$(whoami)@$(hostname):$(pwd)$ " \
+ENV PS1="$(whoami)@$(hostname):$(pwd)\$ " \
 HOME="/root" \
 TERM="xterm"
 
