@@ -4,7 +4,7 @@ ADD rootfs.tar.xz /
 MAINTAINER sparklyballs
 
 # set version for s6 overlay
-ARG OVERLAY_VERSION="v1.21.8.0"
+ARG OVERLAY_VERSION="v1.22.0.0"
 ARG OVERLAY_ARCH="amd64"
 
 # environment variables
