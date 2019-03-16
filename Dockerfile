@@ -2,7 +2,7 @@ FROM alpine:3.9 as rootfs-stage
 MAINTAINER sparkyballs,thelamer
 
 # environment
-ENV REL=v3.9
+ENV REL=v3.8
 ENV ARCH=x86_64
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\

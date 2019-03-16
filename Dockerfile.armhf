@@ -2,8 +2,8 @@ FROM alpine:3.9 as rootfs-stage
 MAINTAINER sparkyballs,thelamer
 
 # environment
-ENV REL=v3.9
-ENV ARCH=armv7
+ENV REL=v3.8
+ENV ARCH=armhf
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\
 alpine-keys,\
@@ -43,7 +43,7 @@ LABEL MAINTAINER="sparkyballs,TheLamer"
 
 # set version for s6 overlay
 ARG OVERLAY_VERSION
-ARG OVERLAY_ARCH="arm"
+ARG OVERLAY_ARCH="armhf"
 
 # environment variables
 ENV PS1="$(whoami)@$(hostname):$(pwd)# " \
