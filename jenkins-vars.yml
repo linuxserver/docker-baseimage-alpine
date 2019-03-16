@@ -1,0 +1,29 @@
+---
+
+# jenkins variables
+project_name: docker-baseimage-alpine
+external_type: github_stable
+release_type: stable
+release_tag: 3.9
+ls_branch: master
+repo_vars:
+  - EXT_GIT_BRANCH = 'master'
+  - EXT_USER = 'just-containers'
+  - EXT_REPO = 's6-overlay'
+  - BUILD_VERSION_ARG = 'OVERLAY_VERSION'
+  - LS_USER = 'linuxserver'
+  - LS_REPO = 'docker-baseimage-alpine'
+  - CONTAINER_NAME = 'baseimage-alpine'
+  - DOCKERHUB_IMAGE = 'lsiobase/alpine'
+  - DEV_DOCKERHUB_IMAGE = 'lsiodev/alpine'
+  - PR_DOCKERHUB_IMAGE = 'lspipepr/alpine'
+  - DIST_IMAGE = 'alpine'
+  - MULTIARCH='true'
+  - CI='true'
+  - CI_WEB='false'
+  - CI_PORT='80'
+  - CI_SSL='true'
+  - CI_DELAY='30'
+  - CI_DOCKERENV='TZ=US/Pacific'
+  - CI_AUTH='user:password'
+  - CI_WEBPATH=''
