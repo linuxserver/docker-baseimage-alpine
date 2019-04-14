@@ -1,0 +1,80 @@
+#!/usr/bin/with-contenv bash
+
+# Exit if mods is not set
+if [ -z ${DOCKER_MODS+x} ]; then
+  exit 0
+fi
+
+# Check for curl
+if [ ! -f /usr/bin/curl ]; then
+  echo "[mod-init] Curl was not found on this system for Docker mods installing"
+  if [ -f /usr/bin/apt ]; then
+    ## Ubuntu
+    apt-get update
+    apt-get install --no-install-recommends -y \
+      curl
+  elif [ -f /sbin/apk ]; then
+    # Alpine
+    apk add --no-cache \
+      curl
+  fi
+fi
+
+# Main run logic
+echo "[mod-init] Attempting to run Docker Modification Logic"
+IFS='|'
+DOCKER_MODS=(${DOCKER_MODS})
+for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
+  FILENAME=$(echo ${DOCKER_MOD} | sed 's/[:\/]/./g')
+  ENDPOINT=$(echo ${DOCKER_MOD} | awk -F: '{print $1}')
+  USERNAME=$(echo ${ENDPOINT} | awk -F/ '{print $1}')
+  TAG=$(echo ${DOCKER_MOD} | awk -F: '{print $2}')
+  # Kill off modification logic if any of the usernames are banned
+  BLACKLIST=$(curl -s https://raw.githubusercontent.com/linuxserver/docker-mods/master/blacklist.txt)
+  IFS=$'\n'
+  BLACKLIST=(${BLACKLIST})
+  for BANNED in "${BLACKLIST[@]}"; do
+    if [ "${BANNED}" == "${USERNAME,,}" ]; then
+      if [ -z ${RUN_BANNED_MODS+x} ]; then
+        echo "[mod-init] ${DOCKER_MOD} is banned from use due to reported abuse aborting mod logic"
+        exit 0
+      else
+        echo "[mod-init] You have chosen to run banned mods ${DOCKER_MOD} will be applied"
+      fi
+    fi
+  done
+  echo "[mod-init] Applying ${DOCKER_MOD} files to container"
+  # Get Dockerhub token for api operations
+  TOKEN=\
+"$(curl \
+    --silent \
+    --header 'GET' \
+    "https://auth.docker.io/token?service=registry.docker.io&scope=repository:${ENDPOINT}:pull" \
+    | awk -F'"' '{print $4}' \
+  )"
+  # Determine first and only layer of image
+  SHALAYER=\
+"$(curl \
+    --silent \
+    --location \
+    --request GET \
+    --header "Authorization: Bearer ${TOKEN}" \
+    https://registry-1.docker.io/v2/${ENDPOINT}/manifests/${TAG} \
+    |grep -m1 "blobSum" \
+    | awk -F'"' '{print $4}' \
+  )"
+  # Check if we have allready applied this layer
+  if [ -f "/${FILENAME}" ] && [ "${SHALAYER}" == "$(cat /${FILENAME})" ]; then
+    echo "[mod-init] ${DOCKER_MOD} at ${SHALAYER} has been previously applied skipping"
+  else
+    # Download and extract layer to /
+    curl \
+      --silent \
+      --location \
+      --request GET \
+      --header "Authorization: Bearer ${TOKEN}" \
+      "https://registry-1.docker.io/v2/${ENDPOINT}/blobs/${SHALAYER}" \
+      | tar xz -C /
+    echo ${SHALAYER} > "/${FILENAME}"
+  fi
+done
