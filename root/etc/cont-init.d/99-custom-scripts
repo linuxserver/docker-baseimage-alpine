@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bash
+
+# Only continue if env variable is
+if [ -z ${CUSTOM_SCRIPTS+x} ]; then
+  exit 0
+fi
+
+# Allow overriding of default scripts directory
+SCRIPTS_DIR=${SCRIPTS_DIR:-/scripts}
+
+echo "Checking for custom scripts in $SCRIPTS_DIR..."
+if [[ -e "$SCRIPTS_DIR" ]]; then
+    for script in $SCRIPTS_DIR/*; do
+        echo "Executing custom script $script..."
+        /bin/bash $script
+        echo "done."
+    done
+fi
