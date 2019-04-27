@@ -1,18 +1,13 @@
 #!/usr/bin/with-contenv bash
 
-# Only continue if env variable is
-if [ -z ${CUSTOM_SCRIPTS+x} ]; then
-  exit 0
-fi
-
-# Allow overriding of default scripts directory
-SCRIPTS_DIR=${SCRIPTS_DIR:-/scripts}
-
-echo "Checking for custom scripts in $SCRIPTS_DIR..."
-if [[ -e "$SCRIPTS_DIR" ]]; then
-    for script in $SCRIPTS_DIR/*; do
-        echo "Executing custom script $script..."
-        /bin/bash $script
-        echo "done."
+# Make sure custom script directory exists and has files in it
+SCRIPTS_DIR="/config/custom-init-scripts"
+if [ -e "${SCRIPTS_DIR}" ] && \
+   [ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; then
+    echo "[custom-init] files found in ${SCRIPTS_DIR} executing"
+    for SCRIPT in ${SCRIPTS_DIR}/*; do
+        echo "[custom-init] ${SCRIPT}: executing..."
+        /bin/bash ${SCRIPT}
+        echo "[custom-init] ${SCRIPT}: exited $?"
     done
 fi
