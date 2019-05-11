@@ -31,7 +31,8 @@ RUN \
  mkdir /root-out && \
  tar xf \
 	/rootfs.tar.xz -C \
-	/root-out
+	/root-out && \
+ sed -i -e 's/^root::/root:!:/' /root-out/etc/shadow
 
 # Runtime stage
 FROM scratch
