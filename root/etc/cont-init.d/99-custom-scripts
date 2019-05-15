@@ -13,3 +13,17 @@ if [ -e "${SCRIPTS_DIR}" ] && \
 else
     echo "[custom-init] no custom scripts found exiting..."
 fi
+
+# Make sure custom services directory exists and has files in it
+SERVICES_DIR="/config/custom-services.d"
+if [ -e "${SERVICES_DIR}" ] && \
+   [ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]; then
+    echo "[custom-init] service folders found in ${SERVICES_DIR} executing"
+    for SERVICE in ${SERVICES_DIR}/*; do
+        echo "[custom-init] ${SERVICE}: copying..."
+        cp -r ${SERVICE} /etc/services.d/
+        echo "[custom-init] ${SERVICE}: done"
+    done
+else
+    echo "[custom-init] no custom services found exiting..."
+fi
