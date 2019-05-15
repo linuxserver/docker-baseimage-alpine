@@ -22,6 +22,7 @@ if [ -e "${SERVICES_DIR}" ] && \
     for SERVICE in ${SERVICES_DIR}/*; do
         echo "[custom-init] ${SERVICE}: copying..."
         cp -r ${SERVICE} /etc/services.d/
+        chmod +x /etc/services.d/${SERVICE}/run
         echo "[custom-init] ${SERVICE}: done"
     done
 else
