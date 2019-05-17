@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 
 # Directories
-SCRIPTS_DIR="/config/custom-init-scripts"
+SCRIPTS_DIR="/config/custom-cont-init.d"
 SERVICES_DIR="/config/custom-services.d"
 
 # Make sure custom directories exist and have files in them
