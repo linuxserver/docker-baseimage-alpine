@@ -1,0 +1,45 @@
+#!/usr/bin/with-contenv bash
+
+# Directories
+SCRIPTS_DIR="/config/custom-init-scripts"
+SERVICES_DIR="/config/custom-services.d"
+
+# Make sure custom directories exist and have files in them
+if ([ -e "${SCRIPTS_DIR}" ] && \
+   [ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]) || \
+   ([ -e "${SERVICES_DIR}" ] && \
+   [ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]); then
+    if [ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; then
+      echo "[custom-init] files found in ${SCRIPTS_DIR} executing"
+      for SCRIPT in ${SCRIPTS_DIR}/*; do
+        NAME="$(basename "${SCRIPT}")"
+        if [ -f "${SCRIPT}" ]; then
+          echo "[custom-init] ${NAME}: executing..."
+          /bin/bash ${SCRIPT}
+          echo "[custom-init] ${NAME}: exited $?"
+        elif [ ! -f "${SCRIPT}" ]; then
+          echo "[custom-init] ${NAME}: is not a file"
+        fi
+      done
+    fi
+    if [ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]; then
+      echo "[custom-init] service files found in ${SERVICES_DIR} copying"
+      for SERVICE in ${SERVICES_DIR}/*; do
+        NAME="$(basename "${SERVICE}")"
+        if ! $(cmp -s ${SERVICE} /etc/services.d/${NAME}/run) && \
+           [ -f "${SERVICE}" ]; then
+          echo "[custom-init] ${NAME}: new file detected copying..."
+          mkdir -p /etc/services.d/${NAME}/
+          cp ${SERVICE} /etc/services.d/${NAME}/run
+          chmod +x /etc/services.d/${NAME}/run
+          echo "[custom-init] ${NAME}: copied"
+        elif [ ! -f "${SERVICE}" ]; then
+          echo "[custom-init] ${NAME}: is not a file"
+        else
+          echo "[custom-init] ${NAME}: is up to date"
+        fi
+      done
+    fi
+else
+    echo "[custom-init] no custom files found exiting..."
+fi
