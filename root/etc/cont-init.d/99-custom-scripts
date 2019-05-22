@@ -44,7 +44,6 @@ if ([ -e "${SCRIPTS_DIR}" ] && \
         fi
       done
     fi
-  fi
 else
   echo "[custom-init] no custom files found exiting..."
 fi
