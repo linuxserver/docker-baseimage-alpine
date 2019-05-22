@@ -1,7 +1,7 @@
 ---
 
 # project information
-project_name: base-alpine-example
+project_name: baseimage-alpine
 full_custom_readme: |
   {% raw -%}
   [linuxserverurl]: https://linuxserver.io
