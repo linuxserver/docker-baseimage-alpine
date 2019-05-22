@@ -222,7 +222,7 @@ pipeline {
               docker run --rm -e CONTAINER_NAME=${CONTAINER_NAME} -e GITHUB_BRANCH=3.8 -v ${TEMPDIR}:/ansible/readme linuxserver/doc-builder:latest
               if [ "$(md5sum ${TEMPDIR}/${LS_REPO}/Jenkinsfile | awk '{ print $1 }')" != "$(md5sum Jenkinsfile | awk '{ print $1 }')" ] || \
                  [ "$(md5sum ${TEMPDIR}/${CONTAINER_NAME}/README.md | awk '{ print $1 }')" != "$(md5sum README.md | awk '{ print $1 }')" ] || \
-                 [ "$(md5sum ${TEMPDIR}/${LS_REPO}/LICENSE | md5sum | cut -c1-8)" != "${LICENSE_TAG}" ]; then
+                 [ "$(cat ${TEMPDIR}/${LS_REPO}/LICENSE | md5sum | cut -c1-8)" != "${LICENSE_TAG}" ]; then
                 mkdir -p ${TEMPDIR}/repo
                 git clone https://github.com/${LS_USER}/${LS_REPO}.git ${TEMPDIR}/repo/${LS_REPO}
                 git --git-dir ${TEMPDIR}/repo/${LS_REPO}/.git checkout -f 3.8
