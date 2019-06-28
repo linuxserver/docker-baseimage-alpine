@@ -35,7 +35,7 @@ pipeline {
         script{
           env.EXIT_STATUS = ''
           env.LS_RELEASE = sh(
-            script: '''docker run --rm alexeiled/skopeo sh -c 'skopeo inspect docker://docker.io/'${DOCKERHUB_IMAGE}':3.9 2>/dev/null' | jq -r '.Labels.build_version' | awk '{print $3}' | grep '\\-ls' || : ''',
+            script: '''docker run --rm alexeiled/skopeo sh -c 'skopeo inspect docker://docker.io/'${DOCKERHUB_IMAGE}':3.10 2>/dev/null' | jq -r '.Labels.build_version' | awk '{print $3}' | grep '\\-ls' || : ''',
             returnStdout: true).trim()
           env.LS_RELEASE_NOTES = sh(
             script: '''cat readme-vars.yml | awk -F \\" '/date: "[0-9][0-9].[0-9][0-9].[0-9][0-9]:/ {print $4;exit;}' | sed -E ':a;N;$!ba;s/\\r{0,1}\\n/\\\\n/g' ''',
@@ -507,12 +507,12 @@ pipeline {
           sh '''#! /bin/bash
              echo $DOCKERPASS | docker login -u $DOCKERUSER --password-stdin
              '''
-          sh "docker tag ${IMAGE}:${META_TAG} ${IMAGE}:3.9"
-          sh "docker push ${IMAGE}:3.9"
+          sh "docker tag ${IMAGE}:${META_TAG} ${IMAGE}:3.10"
+          sh "docker push ${IMAGE}:3.10"
           sh "docker push ${IMAGE}:${META_TAG}"
           sh '''docker rmi \
                 ${IMAGE}:${META_TAG} \
-                ${IMAGE}:3.9 || :'''
+                ${IMAGE}:3.10 || :'''
                 
         }
       }
@@ -542,24 +542,24 @@ pipeline {
                   docker tag lsiodev/buildcache:arm32v7-${COMMIT_SHA}-${BUILD_NUMBER} ${IMAGE}:arm32v7-${META_TAG}
                   docker tag lsiodev/buildcache:arm64v8-${COMMIT_SHA}-${BUILD_NUMBER} ${IMAGE}:arm64v8-${META_TAG}
                 fi'''
-          sh "docker tag ${IMAGE}:amd64-${META_TAG} ${IMAGE}:amd64-3.9"
-          sh "docker tag ${IMAGE}:arm32v7-${META_TAG} ${IMAGE}:arm32v7-3.9"
-          sh "docker tag ${IMAGE}:arm64v8-${META_TAG} ${IMAGE}:arm64v8-3.9"
+          sh "docker tag ${IMAGE}:amd64-${META_TAG} ${IMAGE}:amd64-3.10"
+          sh "docker tag ${IMAGE}:arm32v7-${META_TAG} ${IMAGE}:arm32v7-3.10"
+          sh "docker tag ${IMAGE}:arm64v8-${META_TAG} ${IMAGE}:arm64v8-3.10"
           sh "docker push ${IMAGE}:amd64-${META_TAG}"
           sh "docker push ${IMAGE}:arm32v7-${META_TAG}"
           sh "docker push ${IMAGE}:arm64v8-${META_TAG}"
-          sh "docker push ${IMAGE}:amd64-3.9"
-          sh "docker push ${IMAGE}:arm32v7-3.9"
-          sh "docker push ${IMAGE}:arm64v8-3.9"
-          sh "docker manifest push --purge ${IMAGE}:3.9 || :"
-          sh "docker manifest create ${IMAGE}:3.9 ${IMAGE}:amd64-3.9 ${IMAGE}:arm32v7-3.9 ${IMAGE}:arm64v8-3.9"
-          sh "docker manifest annotate ${IMAGE}:3.9 ${IMAGE}:arm32v7-3.9 --os linux --arch arm"
-          sh "docker manifest annotate ${IMAGE}:3.9 ${IMAGE}:arm64v8-3.9 --os linux --arch arm64 --variant v8"
+          sh "docker push ${IMAGE}:amd64-3.10"
+          sh "docker push ${IMAGE}:arm32v7-3.10"
+          sh "docker push ${IMAGE}:arm64v8-3.10"
+          sh "docker manifest push --purge ${IMAGE}:3.10 || :"
+          sh "docker manifest create ${IMAGE}:3.10 ${IMAGE}:amd64-3.10 ${IMAGE}:arm32v7-3.10 ${IMAGE}:arm64v8-3.10"
+          sh "docker manifest annotate ${IMAGE}:3.10 ${IMAGE}:arm32v7-3.10 --os linux --arch arm"
+          sh "docker manifest annotate ${IMAGE}:3.10 ${IMAGE}:arm64v8-3.10 --os linux --arch arm64 --variant v8"
           sh "docker manifest push --purge ${IMAGE}:${META_TAG} || :"
           sh "docker manifest create ${IMAGE}:${META_TAG} ${IMAGE}:amd64-${META_TAG} ${IMAGE}:arm32v7-${META_TAG} ${IMAGE}:arm64v8-${META_TAG}"
           sh "docker manifest annotate ${IMAGE}:${META_TAG} ${IMAGE}:arm32v7-${META_TAG} --os linux --arch arm"
           sh "docker manifest annotate ${IMAGE}:${META_TAG} ${IMAGE}:arm64v8-${META_TAG} --os linux --arch arm64 --variant v8"
-          sh "docker manifest push --purge ${IMAGE}:3.9"
+          sh "docker manifest push --purge ${IMAGE}:3.10"
           sh "docker manifest push --purge ${IMAGE}:${META_TAG}"
         }
       }

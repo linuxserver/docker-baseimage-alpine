@@ -1,8 +1,8 @@
-FROM alpine:3.9 as rootfs-stage
+FROM alpine:3.10 as rootfs-stage
 MAINTAINER sparkyballs,thelamer
 
 # environment
-ENV REL=v3.9
+ENV REL=v3.10
 ENV ARCH=armv7
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\
@@ -43,7 +43,7 @@ LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DA
 LABEL MAINTAINER="sparkyballs,TheLamer"
 
 # set version for s6 overlay
-ARG OVERLAY_VERSION="v1.22.0.0"
+ARG OVERLAY_VERSION="v1.22.1.0"
 ARG OVERLAY_ARCH="arm"
 
 # environment variables
