@@ -11,7 +11,7 @@
 | :---: | --- |
 | Discord | [Discord](https://discord.gg/YWrKVTn) |
 | IRC | freenode at `#linuxserver.io` more information at:- [IRC][ircurl]
-| Forum | [Linuserver.io forum][forumurl] |
+| Forum | [LinuxServer.io forum][forumurl] |
 
 &nbsp;
 &nbsp;
