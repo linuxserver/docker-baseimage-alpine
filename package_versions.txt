@@ -21,7 +21,7 @@ readline-7.0.003-r0
 scanelf-1.2.3-r0
 shadow-4.5-r0
 ssl_client-1.28.4-r3
-tzdata-2019a-r0
+tzdata-2019b-r0
 xz-5.2.4-r0
 xz-libs-5.2.4-r0
 zlib-1.2.11-r1
