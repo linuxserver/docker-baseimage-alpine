@@ -69,9 +69,11 @@ RUN \
 	"https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" && \
  tar xfz \
 	/tmp/s6-overlay.tar.gz -C / && \
- echo "**** create abc user and make our folders ****" && \
+ echo "**** create linuxserver.io and abc users and make our folders ****" && \
  groupmod -g 1000 users && \
- useradd -u 911 -U -d /config -s /bin/false abc && \
+ useradd -u 911 -U -d /config -s /bin/false linuxserver.io && \
+ useradd -u 912 -U -d /config -s /bin/false abc && \
+ usermod -G users linuxserver.io && \
  usermod -G users abc && \
  mkdir -p \
 	/app \
