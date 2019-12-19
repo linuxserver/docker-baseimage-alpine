@@ -5,7 +5,7 @@ project_name: docker-baseimage-alpine
 external_type: os
 release_type: prerelease
 release_tag: "3.10"
-ls_branch: 3.10
+ls_branch: "3.10"
 repo_vars:
   - BUILD_VERSION_ARG = 'OS'
   - LS_USER = 'linuxserver'
