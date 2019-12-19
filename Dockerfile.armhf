@@ -1,7 +1,7 @@
 FROM alpine:3.10 as rootfs-stage
 
 # environment
-ENV REL=v3.10
+ENV REL=v3.11
 ENV ARCH=armv7
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\
