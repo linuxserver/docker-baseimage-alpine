@@ -60,6 +60,7 @@ RUN \
 	bash \
 	ca-certificates \
 	coreutils \
+	procps \
 	shadow \
 	tzdata && \
  echo "**** add s6 overlay ****" && \
@@ -76,6 +77,7 @@ RUN \
 	/app \
 	/config \
 	/defaults && \
+ mv /usr/bin/with-contenv /usr/bin/with-contenvb && \
  echo "**** add qemu ****" && \
  curl -o \
  /usr/bin/qemu-arm-static -L \
