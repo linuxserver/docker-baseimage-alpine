@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+readonly ARCH=$(uname -m)
+if [[ ${ARCH} != "aarch64" ]] && [[ ${ARCH} != "armv7l" ]] && [[ ${ARCH} != "x86_64" ]]; then
+    echo "This container does not support your CPU architecture (${ARCH})."
+    echo "Supported architectures are:
+    - aarch64: aka armv8 ex raspberry pi 4
+    - armv7l: aka armv7 or armhf ex raspberry pi 2-3
+    - x86_64: aka 64-bit AMD or Intel desktop or server"
+    while : ; do
+        sleep 1
+    done
+fi
