@@ -41,7 +41,7 @@ pipeline {
         script{
           env.EXIT_STATUS = ''
           env.LS_RELEASE = sh(
-            script: '''docker run --rm alexeiled/skopeo sh -c 'skopeo inspect docker://docker.io/'${DOCKERHUB_IMAGE}':3.11 2>/dev/null' | jq -r '.Labels.build_version' | awk '{print $3}' | grep '\\-ls' || : ''',
+            script: '''docker run --rm alexeiled/skopeo sh -c 'skopeo inspect docker://docker.io/'${DOCKERHUB_IMAGE}':3.12 2>/dev/null' | jq -r '.Labels.build_version' | awk '{print $3}' | grep '\\-ls' || : ''',
             returnStdout: true).trim()
           env.LS_RELEASE_NOTES = sh(
             script: '''cat readme-vars.yml | awk -F \\" '/date: "[0-9][0-9].[0-9][0-9].[0-9][0-9]:/ {print $4;exit;}' | sed -E ':a;N;$!ba;s/\\r{0,1}\\n/\\\\n/g' ''',
@@ -540,8 +540,8 @@ pipeline {
                   echo $GITLAB_TOKEN | docker login registry.gitlab.com -u LinuxServer.io --password-stdin
                   for PUSHIMAGE in "${GITHUBIMAGE}" "${GITLABIMAGE}" "${IMAGE}"; do
                     docker tag ${IMAGE}:${META_TAG} ${PUSHIMAGE}:${META_TAG}
-                    docker tag ${PUSHIMAGE}:${META_TAG} ${PUSHIMAGE}:3.11
-                    docker push ${PUSHIMAGE}:3.11
+                    docker tag ${PUSHIMAGE}:${META_TAG} ${PUSHIMAGE}:3.12
+                    docker push ${PUSHIMAGE}:3.12
                     docker push ${PUSHIMAGE}:${META_TAG}
                   done
                '''
@@ -550,7 +550,7 @@ pipeline {
                 for DELETEIMAGE in "${GITHUBIMAGE}" "{GITLABIMAGE}" "${IMAGE}"; do
                   docker rmi \
                   ${DELETEIMAGE}:${META_TAG} \
-                  ${DELETEIMAGE}:3.11 || :
+                  ${DELETEIMAGE}:3.12 || :
                 done
              '''
         }
@@ -587,40 +587,40 @@ pipeline {
                     docker tag ${IMAGE}:amd64-${META_TAG} ${MANIFESTIMAGE}:amd64-${META_TAG}
                     docker tag ${IMAGE}:arm32v7-${META_TAG} ${MANIFESTIMAGE}:arm32v7-${META_TAG}
                     docker tag ${IMAGE}:arm64v8-${META_TAG} ${MANIFESTIMAGE}:arm64v8-${META_TAG}
-                    docker tag ${MANIFESTIMAGE}:amd64-${META_TAG} ${MANIFESTIMAGE}:amd64-3.11
-                    docker tag ${MANIFESTIMAGE}:arm32v7-${META_TAG} ${MANIFESTIMAGE}:arm32v7-3.11
-                    docker tag ${MANIFESTIMAGE}:arm64v8-${META_TAG} ${MANIFESTIMAGE}:arm64v8-3.11
+                    docker tag ${MANIFESTIMAGE}:amd64-${META_TAG} ${MANIFESTIMAGE}:amd64-3.12
+                    docker tag ${MANIFESTIMAGE}:arm32v7-${META_TAG} ${MANIFESTIMAGE}:arm32v7-3.12
+                    docker tag ${MANIFESTIMAGE}:arm64v8-${META_TAG} ${MANIFESTIMAGE}:arm64v8-3.12
                     docker push ${MANIFESTIMAGE}:amd64-${META_TAG}
                     docker push ${MANIFESTIMAGE}:arm32v7-${META_TAG}
                     docker push ${MANIFESTIMAGE}:arm64v8-${META_TAG}
-                    docker push ${MANIFESTIMAGE}:amd64-3.11
-                    docker push ${MANIFESTIMAGE}:arm32v7-3.11
-                    docker push ${MANIFESTIMAGE}:arm64v8-3.11
-                    docker manifest push --purge ${MANIFESTIMAGE}:3.11 || :
-                    docker manifest create ${MANIFESTIMAGE}:3.11 ${MANIFESTIMAGE}:amd64-3.11 ${MANIFESTIMAGE}:arm32v7-3.11 ${MANIFESTIMAGE}:arm64v8-3.11
-                    docker manifest annotate ${MANIFESTIMAGE}:3.11 ${MANIFESTIMAGE}:arm32v7-3.11 --os linux --arch arm
-                    docker manifest annotate ${MANIFESTIMAGE}:3.11 ${MANIFESTIMAGE}:arm64v8-3.11 --os linux --arch arm64 --variant v8
+                    docker push ${MANIFESTIMAGE}:amd64-3.12
+                    docker push ${MANIFESTIMAGE}:arm32v7-3.12
+                    docker push ${MANIFESTIMAGE}:arm64v8-3.12
+                    docker manifest push --purge ${MANIFESTIMAGE}:3.12 || :
+                    docker manifest create ${MANIFESTIMAGE}:3.12 ${MANIFESTIMAGE}:amd64-3.12 ${MANIFESTIMAGE}:arm32v7-3.12 ${MANIFESTIMAGE}:arm64v8-3.12
+                    docker manifest annotate ${MANIFESTIMAGE}:3.12 ${MANIFESTIMAGE}:arm32v7-3.12 --os linux --arch arm
+                    docker manifest annotate ${MANIFESTIMAGE}:3.12 ${MANIFESTIMAGE}:arm64v8-3.12 --os linux --arch arm64 --variant v8
                     docker manifest push --purge ${MANIFESTIMAGE}:${META_TAG} || :
                     docker manifest create ${MANIFESTIMAGE}:${META_TAG} ${MANIFESTIMAGE}:amd64-${META_TAG} ${MANIFESTIMAGE}:arm32v7-${META_TAG} ${MANIFESTIMAGE}:arm64v8-${META_TAG}
                     docker manifest annotate ${MANIFESTIMAGE}:${META_TAG} ${MANIFESTIMAGE}:arm32v7-${META_TAG} --os linux --arch arm
                     docker manifest annotate ${MANIFESTIMAGE}:${META_TAG} ${MANIFESTIMAGE}:arm64v8-${META_TAG} --os linux --arch arm64 --variant v8
-                    docker manifest push --purge ${MANIFESTIMAGE}:3.11
+                    docker manifest push --purge ${MANIFESTIMAGE}:3.12
                     docker manifest push --purge ${MANIFESTIMAGE}:${META_TAG} 
                   done
                   docker tag ${IMAGE}:amd64-${META_TAG} ${GITHUBIMAGE}:amd64-${META_TAG}
                   docker tag ${IMAGE}:arm32v7-${META_TAG} ${GITHUBIMAGE}:arm32v7-${META_TAG}
                   docker tag ${IMAGE}:arm64v8-${META_TAG} ${GITHUBIMAGE}:arm64v8-${META_TAG}
-                  docker tag ${GITHUBIMAGE}:amd64-${META_TAG} ${GITHUBIMAGE}:3.11
+                  docker tag ${GITHUBIMAGE}:amd64-${META_TAG} ${GITHUBIMAGE}:3.12
                   docker tag ${GITHUBIMAGE}:amd64-${META_TAG} ${GITHUBIMAGE}:${META_TAG}
-                  docker tag ${GITHUBIMAGE}:arm32v7-${META_TAG} ${GITHUBIMAGE}:arm32v7-3.11
-                  docker tag ${GITHUBIMAGE}:arm64v8-${META_TAG} ${GITHUBIMAGE}:arm64v8-3.11
+                  docker tag ${GITHUBIMAGE}:arm32v7-${META_TAG} ${GITHUBIMAGE}:arm32v7-3.12
+                  docker tag ${GITHUBIMAGE}:arm64v8-${META_TAG} ${GITHUBIMAGE}:arm64v8-3.12
                   docker push ${GITHUBIMAGE}:amd64-${META_TAG}
                   docker push ${GITHUBIMAGE}:arm32v7-${META_TAG}
                   docker push ${GITHUBIMAGE}:arm64v8-${META_TAG}
-                  docker push ${GITHUBIMAGE}:3.11
+                  docker push ${GITHUBIMAGE}:3.12
                   docker push ${GITHUBIMAGE}:${META_TAG}
-                  docker push ${GITHUBIMAGE}:arm32v7-3.11
-                  docker push ${GITHUBIMAGE}:arm64v8-3.11
+                  docker push ${GITHUBIMAGE}:arm32v7-3.12
+                  docker push ${GITHUBIMAGE}:arm64v8-3.12
                '''
           }
         }
