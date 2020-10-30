@@ -20,15 +20,59 @@ if [ ! -f /usr/bin/curl ]; then
   fi
 fi
 
+## Functions
+
+# Use different filtering depending on URL
+get_blob_sha () {
+  if [[ $1 == "ghcr" ]]; then
+    curl \
+      --silent \
+      --location \
+      --request GET \
+      --header "Authorization: Bearer $2" \
+      $3 |\
+      grep -A4 'layers' |\
+      grep -m1 'digest' |\
+      awk -F'"' '{print $4}'
+  else
+    curl \
+      --silent \
+      --location \
+      --request GET \
+      --header "Authorization: Bearer $2" \
+      $3 |\
+      grep -m1 "blobSum" |\
+      awk -F'"' '{print $4}'
+  fi
+}
+
 # Main run logic
 echo "[mod-init] Attempting to run Docker Modification Logic"
 IFS='|'
 DOCKER_MODS=(${DOCKER_MODS})
 for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
-  FILENAME=$(echo ${DOCKER_MOD} | sed 's/[:\/]/./g')
-  ENDPOINT=$(echo ${DOCKER_MOD} | awk -F: '{print $1}')
-  USERNAME=$(echo ${ENDPOINT} | awk -F/ '{print $1}')
-  TAG=$(echo ${DOCKER_MOD} | awk -F: '{print $2}')
+  # Support alternative endpoints
+  if [[ ${DOCKER_MOD} == ghcr.io/* ]] || [[ ${DOCKER_MOD} == linuxserver/* ]]; then
+    DOCKER_MOD=$(echo ${DOCKER_MOD} | sed 's/ghcr.io\///g')
+    FILENAME=$(echo ${DOCKER_MOD} | sed 's/[:\/]/./g')
+    REPO=$(echo ${DOCKER_MOD} | awk -F'(/|:)' '{print $2}')
+    ENDPOINT=$(echo ${DOCKER_MOD} | awk -F: '{print $1}')
+    USERNAME=$(echo ${ENDPOINT} | awk -F/ '{print $1}')
+    TAG=$(echo ${DOCKER_MOD} | awk -F: '{print $2}')
+    AUTH_URL="https://ghcr.io/token?scope=repository%3A${USERNAME}%2F${REPO}%3Apull"
+    MANIFEST_URL="https://ghcr.io/v2/${ENDPOINT}/manifests/${TAG}"
+    BLOB_URL="https://ghcr.io/v2/${ENDPOINT}/blobs/"
+    MODE="ghcr"
+  else
+    FILENAME=$(echo ${DOCKER_MOD} | sed 's/[:\/]/./g')
+    ENDPOINT=$(echo ${DOCKER_MOD} | awk -F: '{print $1}')
+    USERNAME=$(echo ${ENDPOINT} | awk -F/ '{print $1}')
+    TAG=$(echo ${DOCKER_MOD} | awk -F: '{print $2}')
+    AUTH_URL="https://auth.docker.io/token?service=registry.docker.io&scope=repository:${ENDPOINT}:pull"
+    MANIFEST_URL="https://registry-1.docker.io/v2/${ENDPOINT}/manifests/${TAG}"
+    BLOB_URL="https://registry-1.docker.io/v2/${ENDPOINT}/blobs/"
+    MODE="dockerhub"
+  fi
   # Kill off modification logic if any of the usernames are banned
   BLACKLIST=$(curl -s https://raw.githubusercontent.com/linuxserver/docker-mods/master/blacklist.txt)
   IFS=$'\n'
@@ -49,20 +93,11 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
 "$(curl \
     --silent \
     --header 'GET' \
-    "https://auth.docker.io/token?service=registry.docker.io&scope=repository:${ENDPOINT}:pull" \
+    "${AUTH_URL}" \
     | awk -F'"' '{print $4}' \
   )"
   # Determine first and only layer of image
-  SHALAYER=\
-"$(curl \
-    --silent \
-    --location \
-    --request GET \
-    --header "Authorization: Bearer ${TOKEN}" \
-    https://registry-1.docker.io/v2/${ENDPOINT}/manifests/${TAG} \
-    |grep -m1 "blobSum" \
-    | awk -F'"' '{print $4}' \
-  )"
+  SHALAYER=$(get_blob_sha "${MODE}" "${TOKEN}" "${MANIFEST_URL}")
   # Check if we have allready applied this layer
   if [ -f "/${FILENAME}" ] && [ "${SHALAYER}" == "$(cat /${FILENAME})" ]; then
     echo "[mod-init] ${DOCKER_MOD} at ${SHALAYER} has been previously applied skipping"
@@ -73,7 +108,7 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
       --location \
       --request GET \
       --header "Authorization: Bearer ${TOKEN}" \
-      "https://registry-1.docker.io/v2/${ENDPOINT}/blobs/${SHALAYER}" \
+      "${BLOB_URL}${SHALAYER}" \
       | tar xz -C /
     echo ${SHALAYER} > "/${FILENAME}"
   fi
