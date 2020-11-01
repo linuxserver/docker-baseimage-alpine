@@ -53,21 +53,28 @@ DOCKER_MODS=(${DOCKER_MODS})
 for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
   # Support alternative endpoints
   if [[ ${DOCKER_MOD} == ghcr.io/* ]] || [[ ${DOCKER_MOD} == linuxserver/* ]]; then
-    DOCKER_MOD=$(echo ${DOCKER_MOD} | sed 's/ghcr.io\///g')
-    FILENAME=$(echo ${DOCKER_MOD} | sed 's/[:\/]/./g')
-    REPO=$(echo ${DOCKER_MOD} | awk -F'(/|:)' '{print $2}')
-    ENDPOINT=$(echo ${DOCKER_MOD} | awk -F: '{print $1}')
-    USERNAME=$(echo ${ENDPOINT} | awk -F/ '{print $1}')
-    TAG=$(echo ${DOCKER_MOD} | awk -F: '{print $2}')
+    DOCKER_MOD="${DOCKER_MOD#ghcr.io/*}"
+    ENDPOINT="${DOCKER_MOD%%:*}"
+    USERNAME="${DOCKER_MOD%%/*}"
+    REPO="${ENDPOINT#*/}"
+    TAG="${DOCKER_MOD#*:}"
+    if [[ ${TAG} == "${DOCKER_MOD}" ]]; then
+      TAG="latest"
+    fi
+    FILENAME="${USERNAME}.${REPO}.${TAG}"
     AUTH_URL="https://ghcr.io/token?scope=repository%3A${USERNAME}%2F${REPO}%3Apull"
     MANIFEST_URL="https://ghcr.io/v2/${ENDPOINT}/manifests/${TAG}"
     BLOB_URL="https://ghcr.io/v2/${ENDPOINT}/blobs/"
     MODE="ghcr"
   else
-    FILENAME=$(echo ${DOCKER_MOD} | sed 's/[:\/]/./g')
-    ENDPOINT=$(echo ${DOCKER_MOD} | awk -F: '{print $1}')
-    USERNAME=$(echo ${ENDPOINT} | awk -F/ '{print $1}')
-    TAG=$(echo ${DOCKER_MOD} | awk -F: '{print $2}')
+    ENDPOINT="${DOCKER_MOD%%:*}"
+    USERNAME="${DOCKER_MOD%%/*}"
+    REPO="${ENDPOINT#*/}"
+    TAG="${DOCKER_MOD#*:}"
+    if [[ ${TAG} == "${DOCKER_MOD}" ]]; then
+      TAG="latest"
+    fi
+    FILENAME="${USERNAME}.${REPO}.${TAG}"
     AUTH_URL="https://auth.docker.io/token?service=registry.docker.io&scope=repository:${ENDPOINT}:pull"
     MANIFEST_URL="https://registry-1.docker.io/v2/${ENDPOINT}/manifests/${TAG}"
     BLOB_URL="https://registry-1.docker.io/v2/${ENDPOINT}/blobs/"
