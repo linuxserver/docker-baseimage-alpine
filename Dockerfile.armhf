@@ -48,6 +48,7 @@ ARG OVERLAY_ARCH="arm"
 # add s6 overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}-installer /tmp/
 RUN chmod +x /tmp/s6-overlay-${OVERLAY_ARCH}-installer && /tmp/s6-overlay-${OVERLAY_ARCH}-installer / && rm /tmp/s6-overlay-${OVERLAY_ARCH}-installer
+COPY patch/ /tmp/patch
 
 # environment variables
 ENV PS1="$(whoami)@$(hostname):$(pwd)\\$ " \
@@ -58,6 +59,7 @@ RUN \
  echo "**** install build packages ****" && \
  apk add --no-cache --virtual=build-dependencies \
 	curl \
+	patch \
 	tar && \
  echo "**** install runtime packages ****" && \
  apk add --no-cache \
@@ -76,6 +78,7 @@ RUN \
 	/config \
 	/defaults && \
  mv /usr/bin/with-contenv /usr/bin/with-contenvb && \
+ patch -u /etc/s6/init/init-stage2 -i /tmp/patch/etc/s6/init/init-stage2.patch && \
  echo "**** add qemu ****" && \
  curl -o \
  /usr/bin/qemu-arm-static -L \
