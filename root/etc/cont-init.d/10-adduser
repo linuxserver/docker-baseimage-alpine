@@ -6,6 +6,20 @@ PGID=${PGID:-911}
 groupmod -o -g "$PGID" abc
 usermod -o -u "$PUID" abc
 
+if [ "$(date +%Y)" == "1970" ] && [ "$(uname -m)" == "armv7l" ]; then
+  echo '
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Your DockerHost is most likely running an outdated version of libseccomp
+
+To fix this, please visit https://docs.linuxserver.io/faq#libseccomp
+
+Some apps might not behave correctly without this
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+'
+fi
+
 echo '
 -------------------------------------
           _         ()
