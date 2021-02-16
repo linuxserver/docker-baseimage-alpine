@@ -42,7 +42,7 @@ LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DA
 LABEL maintainer="TheLamer"
 
 # set version for s6 overlay
-ARG OVERLAY_VERSION="v2.2.0.0"
+ARG OVERLAY_VERSION="v2.2.0.3"
 ARG OVERLAY_ARCH="aarch64"
 
 # add s6 overlay
