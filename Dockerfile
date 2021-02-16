@@ -42,12 +42,13 @@ LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DA
 LABEL maintainer="TheLamer"
 
 # set version for s6 overlay
-ARG OVERLAY_VERSION="v2.1.0.2"
+ARG OVERLAY_VERSION="v2.2.0.3"
 ARG OVERLAY_ARCH="amd64"
 
 # add s6 overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}-installer /tmp/
 RUN chmod +x /tmp/s6-overlay-${OVERLAY_ARCH}-installer && /tmp/s6-overlay-${OVERLAY_ARCH}-installer / && rm /tmp/s6-overlay-${OVERLAY_ARCH}-installer
+COPY patch/ /tmp/patch
 
 # environment variables
 ENV PS1="$(whoami)@$(hostname):$(pwd)\\$ " \
@@ -58,6 +59,7 @@ RUN \
  echo "**** install build packages ****" && \
  apk add --no-cache --virtual=build-dependencies \
 	curl \
+	patch \
 	tar && \
  echo "**** install runtime packages ****" && \
  apk add --no-cache \
@@ -76,6 +78,7 @@ RUN \
 	/config \
 	/defaults && \
  mv /usr/bin/with-contenv /usr/bin/with-contenvb && \
+ patch -u /etc/s6/init/init-stage2 -i /tmp/patch/etc/s6/init/init-stage2.patch && \
  echo "**** cleanup ****" && \
  apk del --purge \
 	build-dependencies && \
