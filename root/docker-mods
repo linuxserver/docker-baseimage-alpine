@@ -6,17 +6,19 @@ if [ -z ${DOCKER_MODS+x} ]; then
 fi
 
 # Check for curl
-if [ ! -f /usr/bin/curl ]; then
-  echo "[mod-init] Curl was not found on this system for Docker mods installing"
+if [ ! -f /usr/bin/curl ] || [ ! -f /usr/bin/jq ]; then
+  echo "[mod-init] Curl/JQ was not found on this system for Docker mods installing"
   if [ -f /usr/bin/apt ]; then
     ## Ubuntu
     apt-get update
     apt-get install --no-install-recommends -y \
-      curl
+      curl \
+      jq
   elif [ -f /sbin/apk ]; then
     # Alpine
     apk add --no-cache \
-      curl
+      curl \
+      jq
   fi
 fi
 
@@ -30,19 +32,14 @@ get_blob_sha () {
       --location \
       --request GET \
       --header "Authorization: Bearer $2" \
-      $3 |\
-      grep -A4 'layers' |\
-      grep -m1 'digest' |\
-      awk -F'"' '{print $4}'
+      $3 | jq -r '.layers[0].digest'
   else
     curl \
       --silent \
       --location \
       --request GET \
       --header "Authorization: Bearer $2" \
-      $3 |\
-      grep -m1 "blobSum" |\
-      awk -F'"' '{print $4}'
+      $3 | jq -r '.fsLayers[0].blobSum'
   fi
 }
 
@@ -101,7 +98,7 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
     --silent \
     --header 'GET' \
     "${AUTH_URL}" \
-    | awk -F'"' '{print $4}' \
+    | jq -r '.token' \
   )"
   # Determine first and only layer of image
   SHALAYER=$(get_blob_sha "${MODE}" "${TOKEN}" "${MANIFEST_URL}")
