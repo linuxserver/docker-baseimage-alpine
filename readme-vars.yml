@@ -6,7 +6,7 @@ full_custom_readme: |
   {% raw -%}
   [linuxserverurl]: https://linuxserver.io
   [forumurl]: https://forum.linuxserver.io
-  [ircurl]: https://www.linuxserver.io/irc/
+  [ircurl]: https://mibbit.com/?server=irc.libera.chat&channel=%23linuxserver.io
   [appurl]: https://alpinelinux.org
 
   [![linuxserver.io](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver_medium.png?v=4&s=4000)][linuxserverurl]
@@ -16,7 +16,7 @@ full_custom_readme: |
   | Type | Address/Details |
   | :---: | --- |
   | Discord | [Discord](https://discord.gg/YWrKVTn) |
-  | IRC | freenode at `#linuxserver.io` more information at:- [IRC][ircurl]
+  | IRC | libera at `#linuxserver.io` more information at:- [IRC][ircurl]
   | Forum | [LinuxServer.io forum][forumurl] |
 
   &nbsp;
