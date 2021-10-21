@@ -10,7 +10,7 @@ echo '
 -------------------------------------
           _         ()
          | |  ___   _    __
-         | | / __| | |  /  \ 
+         | | / __| | |  /  \
          | | \__ \ | | | () |
          |_| |___/ |_|  \__/
 
@@ -40,14 +40,15 @@ if [[ "${time32}" == "1970" || "${time32}" == "1969" ]] && [ "$(uname -m)" == "a
   echo '
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-Your DockerHost is most likely running an outdated version of libseccomp
+Your DockerHost is running an outdated version of libseccomp
 
 To fix this, please visit https://docs.linuxserver.io/faq#libseccomp
 
-Some apps might not behave correctly without this
+Apps will not behave correctly without this
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 '
+sleep infinity
 fi
 
 chown abc:abc /app
