@@ -1,7 +1,7 @@
-FROM alpine:3.13 as rootfs-stage
+FROM alpine:3.14 as rootfs-stage
 
 # environment
-ENV REL=v3.14
+ENV REL=v3.15
 ENV ARCH=x86_64
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\
