@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bash
+
+if ([ -d "/config/custom-cont-init.d" ] && [ -n "$(find /config/custom-cont-init.d ! -user root)" ]) || ([ -d "/config/custom-services.d" ] && [ -n "$(find /config/custom-services.d ! -user root)" ]); then
+    echo "**** Potential tampering with custom scripts/services detected ****"
+    randstr=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-8};echo;)
+    for folder in "/config/custom-cont-init.d" "/config/custom-services.d"; do
+        if [ -d "${folder}" ]; then
+            mv "${folder}" "${folder}.${randstr}"
+            echo "**** Folder ${folder} is moved to ${folder}.${randstr} ****"
+        fi
+    done
+    echo "**** The folders '/config/custom-cont-init.d' and '/config/custom-services.d'; and their contents need to all be owned by root to prevent root escalation inside the container!!! ****"
+    mkdir -p /config/custom-cont-init.d /config/custom-services.d
+    chown 0:0 /config/custom-cont-init.d /config/custom-services.d
+elif ([ -d "/config/custom-cont-init.d" ] && [ -n "$(find /config/custom-cont-init.d -perm -o+w)" ]) || ([ -d "/config/custom-services.d" ] && [ -n "$(find /config/custom-services.d -perm -o+w)" ]); then
+    echo "**** The folders '/config/custom-cont-init.d' or '/config/custom-services.d'; or some of their contents have write permissions for others, which is a security risk. ****"
+    echo "**** Please review the permissions of these two folders and their contents to make sure they are owned by root, and can only be modified by root. ****"
+fi
