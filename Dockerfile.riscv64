@@ -1,7 +1,7 @@
 FROM alpine:edge as rootfs-stage
 
 # environment
-ENV REL=v3.15
+ENV REL=edge
 ENV ARCH=riscv64
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\
