@@ -534,6 +534,40 @@ pipeline {
                   ghcr.io/linuxserver/lsiodev-buildcache:arm64v8-${COMMIT_SHA}-${BUILD_NUMBER} || :'''
           }
         }
+        stage('Build RISCV64') {
+          agent {
+            label 'RISCV64'
+          }
+          steps {
+            echo "Running on node: ${NODE_NAME}"
+            echo 'Logging into Github'
+            sh '''#! /bin/bash
+                  echo $GITHUB_TOKEN | docker login ghcr.io -u LinuxServer-CI --password-stdin
+               '''
+            sh "docker build \
+              --label \"org.opencontainers.image.created=${GITHUB_DATE}\" \
+              --label \"org.opencontainers.image.authors=linuxserver.io\" \
+              --label \"org.opencontainers.image.url=https://github.com/linuxserver/docker-baseimage-alpine/packages\" \
+              --label \"org.opencontainers.image.documentation=https://docs.linuxserver.io/images/docker-baseimage-alpine\" \
+              --label \"org.opencontainers.image.source=https://github.com/linuxserver/docker-baseimage-alpine\" \
+              --label \"org.opencontainers.image.version=${EXT_RELEASE_CLEAN}-ls${LS_TAG_NUMBER}\" \
+              --label \"org.opencontainers.image.revision=${COMMIT_SHA}\" \
+              --label \"org.opencontainers.image.vendor=linuxserver.io\" \
+              --label \"org.opencontainers.image.licenses=GPL-3.0-only\" \
+              --label \"org.opencontainers.image.ref.name=${COMMIT_SHA}\" \
+              --label \"org.opencontainers.image.title=Baseimage-alpine\" \
+              --label \"org.opencontainers.image.description=baseimage-alpine image by linuxserver.io\" \
+              --no-cache --pull -f Dockerfile.riscv64 -t ${IMAGE}:riscv64-${META_TAG} \
+              --build-arg ${BUILD_VERSION_ARG}=${EXT_RELEASE} --build-arg VERSION=\"${VERSION_TAG}\" --build-arg BUILD_DATE=${GITHUB_DATE} ."
+            sh "docker tag ${IMAGE}:riscv64-${META_TAG} ghcr.io/linuxserver/lsiodev-buildcache:riscv64-${COMMIT_SHA}-${BUILD_NUMBER}"
+            retry(5) {
+              sh "docker push ghcr.io/linuxserver/lsiodev-buildcache:riscv64-${COMMIT_SHA}-${BUILD_NUMBER}"
+            }
+            sh '''docker rmi \
+                  ${IMAGE}:riscv64-${META_TAG} \
+                  ghcr.io/linuxserver/lsiodev-buildcache:arm64v8-${COMMIT_SHA}-${BUILD_NUMBER} || :'''
+          }
+        }
       }
     }
     // Take the image we just built and dump package versions for comparison
