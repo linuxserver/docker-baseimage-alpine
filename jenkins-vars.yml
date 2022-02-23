@@ -3,9 +3,9 @@
 # jenkins variables
 project_name: docker-baseimage-alpine
 external_type: os
-release_type: stable
-release_tag: "3.15"
-ls_branch: master
+release_type: prerelease
+release_tag: edge
+ls_branch: edge
 repo_vars:
   - BUILD_VERSION_ARG = 'OS'
   - LS_USER = 'linuxserver'
