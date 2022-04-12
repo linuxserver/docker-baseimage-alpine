@@ -25,6 +25,6 @@ scanelf-1.2.6-r0
 shadow-4.8.1-r0
 ssl_client-1.31.1-r22
 tzdata-2022a-r0
-xz-5.2.5-r0
-xz-libs-5.2.5-r0
+xz-5.2.5-r1
+xz-libs-5.2.5-r1
 zlib-1.2.12-r0
