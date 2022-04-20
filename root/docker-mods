@@ -27,14 +27,14 @@ fi
 # Use different filtering depending on URL
 get_blob_sha () {
   if [[ $1 == "ghcr" ]]; then
-    curl \
+    curl -f --retry 10 --retry-max-time 60 --retry-connrefused \
       --silent \
       --location \
       --request GET \
       --header "Authorization: Bearer $2" \
       $3 | jq -r '.layers[0].digest'
   else
-    curl \
+    curl -f --retry 10 --retry-max-time 60 --retry-connrefused \
       --silent \
       --location \
       --request GET \
@@ -94,7 +94,7 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
   echo "[mod-init] Applying ${DOCKER_MOD} files to container"
   # Get Dockerhub token for api operations
   TOKEN=\
-"$(curl \
+"$(curl -f --retry 10 --retry-max-time 60 --retry-connrefused \
     --silent \
     --header 'GET' \
     "${AUTH_URL}" \
@@ -107,13 +107,15 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
     echo "[mod-init] ${DOCKER_MOD} at ${SHALAYER} has been previously applied skipping"
   else
     # Download and extract layer to /
-    curl \
+    curl -f --retry 10 --retry-max-time 60 --retry-all-errors \
       --silent \
       --location \
       --request GET \
       --header "Authorization: Bearer ${TOKEN}" \
-      "${BLOB_URL}${SHALAYER}" \
-      | tar xz -C /
+      "${BLOB_URL}${SHALAYER}" -o \
+      /modtarball.tar.xz
+    tar xzf /modtarball.tar.xz -C /
+    rm -rf /modtarball.tar.xz
     echo ${SHALAYER} > "/${FILENAME}"
   fi
 done
