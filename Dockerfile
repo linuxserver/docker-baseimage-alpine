@@ -72,14 +72,12 @@ HOME="/root" \
 TERM="xterm"
 
 RUN \
-  echo "**** install build packages ****" && \
-  apk add --no-cache --virtual=build-dependencies \
-    curl && \
   echo "**** install runtime packages ****" && \
   apk add --no-cache \
     bash \
     ca-certificates \
     coreutils \
+    curl \
     procps \
     shadow \
     tzdata && \
@@ -92,8 +90,6 @@ RUN \
     /config \
     /defaults && \
   echo "**** cleanup ****" && \
-  apk del --purge \
-    build-dependencies && \
   rm -rf \
     /tmp/*
 

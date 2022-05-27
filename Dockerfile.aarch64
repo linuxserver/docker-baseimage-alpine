@@ -72,14 +72,12 @@ HOME="/root" \
 TERM="xterm"
 
 RUN \
-  echo "**** install build packages ****" && \
-  apk add --no-cache --virtual=build-dependencies \
-    curl && \
   echo "**** install runtime packages ****" && \
   apk add --no-cache \
     bash \
     ca-certificates \
     coreutils \
+    curl \
     procps \
     shadow \
     tzdata && \
@@ -97,8 +95,6 @@ RUN \
     "https://lsio-ci.ams3.digitaloceanspaces.com/qemu-aarch64-static" && \
   chmod +x /usr/bin/qemu-aarch64-static && \
   echo "**** cleanup ****" && \
-  apk del --purge \
-    build-dependencies && \
   rm -rf \
     /tmp/*
 
