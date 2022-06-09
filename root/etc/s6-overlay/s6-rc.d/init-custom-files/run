@@ -6,11 +6,20 @@ SERVICES_DIR_OLD="/config/custom-services.d"
 SCRIPTS_DIR="/custom-cont-init.d"
 SERVICES_DIR="/custom-services.d"
 
+# chown legacy folders if they exist
+if [ -e "${SCRIPTS_DIR_OLD}" ]; then
+    chown -R 0:0 "${SCRIPTS_DIR_OLD}"
+fi
+
+if [ -e "${SERVICES_DIR_OLD}" ]; then
+    chown -R 0:0 "${SERVICES_DIR_OLD}"
+fi
+
 # Remove all existing custom services before continuing to ensure
 # we aren't running anything the user may have removed
 if [ -n "$(/bin/ls -A /etc/services.d/custom-service-* 2>/dev/null)" ]; then
-  echo "[custom-init] removing existing custom services..."
-  rm -rf /etc/services.d/custom-service-*
+    echo "[custom-init] removing existing custom services..."
+    rm -rf /etc/services.d/custom-service-*
 fi
 
 if { [ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; } && \
