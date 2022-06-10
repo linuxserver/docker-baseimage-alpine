@@ -174,8 +174,7 @@ if { [ -e "${SERVICES_DIR}" ] && [ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)
           mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/
           cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
           chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
-          echo "oneshot" > /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
-          echo "/etc/s6-overlay/s6-rc.d/custom-svc-${NAME}/run" > /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/up
+          echo "longrun" > /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
           echo "[custom-init] ${NAME}: copied"
         elif [ ! -f "${SERVICE}" ]; then
           echo "[custom-init] ${NAME}: is not a file"
