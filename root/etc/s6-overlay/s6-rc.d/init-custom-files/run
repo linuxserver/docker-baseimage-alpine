@@ -4,9 +4,16 @@
 SCRIPTS_DIR_OLD="/config/custom-cont-init.d"
 SCRIPTS_DIR="/custom-cont-init.d"
 
+SERVICES_DIR_OLD="/config/custom-services.d"
+
 # chown legacy folders if they exist
 if [ -e "${SCRIPTS_DIR_OLD}" ]; then
     chown -R 0:0 "${SCRIPTS_DIR_OLD}"
+fi
+
+# chown legacy folders if they exist
+if [ -e "${SERVICES_DIR_OLD}" ]; then
+    chown -R 0:0 "${SERVICES_DIR_OLD}"
 fi
 
 if { [ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; } && \
