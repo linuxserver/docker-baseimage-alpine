@@ -1,5 +1,14 @@
 #!/usr/bin/with-contenv bash
 
+# Set executable bit on cont-init and services built into the image
+set_legacy_executable_bits() {
+  mkdir -p /etc/{cont-init.d,services.d}
+  chmod +x \
+    /etc/cont-init.d/* \
+    /etc/services.d/*/* 2> /dev/null || true
+}
+set_legacy_executable_bits
+
 # Exit if mods is not set
 if [ -z ${DOCKER_MODS+x} ]; then
   exit 0
@@ -119,3 +128,6 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
     echo ${SHALAYER} > "/${FILENAME}"
   fi
 done
+
+# Set executable bit on cont-init and services that may have been unpacked by mods
+set_legacy_executable_bits

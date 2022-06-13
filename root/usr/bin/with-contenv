@@ -1,7 +1,7 @@
 #! /bin/bash
 if [[ -f /var/run/s6/container_environment/UMASK ]] && [[ "$(pwdx $$)" =~ "/run/s6/services/" ]]; then
   umask $(cat /var/run/s6/container_environment/UMASK)
-  exec /usr/bin/with-contenvb "$@"
+  exec /command/with-contenv "$@"
 else
-  exec /usr/bin/with-contenvb "$@"
+  exec /command/with-contenv "$@"
 fi
