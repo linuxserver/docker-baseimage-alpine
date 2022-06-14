@@ -69,7 +69,8 @@ LABEL maintainer="TheLamer"
 # environment variables
 ENV PS1="$(whoami)@$(hostname):$(pwd)\\$ " \
 HOME="/root" \
-TERM="xterm"
+TERM="xterm" \
+S6_CMD_WAIT_FOR_SERVICES_MAXTIME="0"
 
 RUN \
   echo "**** install runtime packages ****" && \
