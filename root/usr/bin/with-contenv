@@ -1,7 +1,9 @@
 #! /bin/bash
-if [[ -f /var/run/s6/container_environment/UMASK ]] && [[ "$(pwdx $$)" =~ "/run/s6/services/" ]]; then
-  umask $(cat /var/run/s6/container_environment/UMASK)
-  exec /usr/bin/with-contenvb "$@"
-else
-  exec /usr/bin/with-contenvb "$@"
+
+if [[ -f /var/run/s6/container_environment/UMASK ]] && \
+    { [[ "$(pwdx $$)" =~ "/run/s6/legacy-services/" ]] || \
+    [[ "$(pwdx $$)" =~ "/run/s6/services/" ]] || \
+    [[ "$(pwdx $$)" =~ "/servicedirs/svc-" ]]; }; then
+    umask $(cat /var/run/s6/container_environment/UMASK)
 fi
+exec /command/with-contenv "$@"
