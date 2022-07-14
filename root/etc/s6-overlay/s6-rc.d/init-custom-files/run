@@ -18,7 +18,7 @@ fi
 
 if { [ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; } && \
     { [ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]; }; then    
-    echo "[custom-init] no custom files found, exiting..."
+    echo "[custom-init] no custom files found, skipping..."
     exit 0
 fi
 
