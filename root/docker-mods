@@ -208,7 +208,7 @@ run_mods () {
         fi
       fi
       shopt -s dotglob
-      mv /tmp/mod/* /
+      cp -R /tmp/mod/* /
       shopt -u dotglob
       rm -rf /tmp/mod
       rm -rf /modtarball.tar.xz
