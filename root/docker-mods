@@ -213,6 +213,7 @@ run_mods () {
       rm -rf /tmp/mod
       rm -rf /modtarball.tar.xz
       echo ${SHALAYER} > "/${FILENAME}"
+      echo "[mod-init] ${DOCKER_MOD} applied to container"
     fi
   done
 }
