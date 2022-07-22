@@ -114,19 +114,33 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
   # Check if we have allready applied this layer
   if [ -f "/${FILENAME}" ] && [ "${SHALAYER}" == "$(cat /${FILENAME})" ]; then
     echo "[mod-init] ${DOCKER_MOD} at ${SHALAYER} has been previously applied skipping"
-  else
-    # Download and extract layer to /
-    curl -f --retry 10 --retry-max-time 60 --retry-all-errors \
-      --silent \
-      --location \
-      --request GET \
-      --header "Authorization: Bearer ${TOKEN}" \
-      "${BLOB_URL}${SHALAYER}" -o \
-      /modtarball.tar.xz
-    tar xzf /modtarball.tar.xz -C /
-    rm -rf /modtarball.tar.xz
-    echo ${SHALAYER} > "/${FILENAME}"
-  fi
+    else
+      # Download and extract layer to /
+      curl -f --retry 10 --retry-max-time 60 --retry-all-errors \
+        --silent \
+        --location \
+        --request GET \
+        --header "Authorization: Bearer ${TOKEN}" \
+        "${BLOB_URL}${SHALAYER}" -o \
+        /modtarball.tar.xz
+      mkdir -p /tmp/mod
+      tar xzf /modtarball.tar.xz -C /tmp/mod
+      if [ -d /tmp/mod/etc/s6-overlay ]; then
+        if [ -d /tmp/mod/etc/cont-init.d ]; then
+          rm -rf /tmp/mod/etc/cont-init.d
+        fi
+        if [ -d /tmp/mod/etc/services.d ]; then
+          rm -rf /tmp/mod/etc/services.d
+        fi
+      fi
+      shopt -s dotglob
+      cp -R /tmp/mod/* /
+      shopt -u dotglob
+      rm -rf /tmp/mod
+      rm -rf /modtarball.tar.xz
+      echo ${SHALAYER} > "/${FILENAME}"
+      echo "[mod-init] ${DOCKER_MOD} applied to container"
+    fi
 done
 
 # Set executable bit on cont-init and services that may have been unpacked by mods
