@@ -116,7 +116,7 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
     echo "[mod-init] ${DOCKER_MOD} at ${SHALAYER} has been previously applied skipping"
   else
     # Download and extract layer to /
-    curl -f --retry 10 --retry-max-time 60 --retry-connrefused \
+    curl -f --retry 10 --retry-max-time 60 --retry-all-errors \
       --silent \
       --location \
       --request GET \
