@@ -123,9 +123,23 @@ for DOCKER_MOD in "${DOCKER_MODS[@]}"; do
       --header "Authorization: Bearer ${TOKEN}" \
       "${BLOB_URL}${SHALAYER}" -o \
       /modtarball.tar.xz
-    tar xzf /modtarball.tar.xz -C /
+    mkdir -p /tmp/mod
+    tar xzf /modtarball.tar.xz -C /tmp/mod
+    if [ -d /tmp/mod/etc/s6-overlay ]; then
+      if [ -d /tmp/mod/etc/cont-init.d ]; then
+        rm -rf /tmp/mod/etc/cont-init.d
+      fi
+      if [ -d /tmp/mod/etc/services.d ]; then
+        rm -rf /tmp/mod/etc/services.d
+      fi
+    fi
+    shopt -s dotglob
+    cp -R /tmp/mod/* /
+    shopt -u dotglob
+    rm -rf /tmp/mod
     rm -rf /modtarball.tar.xz
     echo ${SHALAYER} > "/${FILENAME}"
+    echo "[mod-init] ${DOCKER_MOD} applied to container"
   fi
 done
 
