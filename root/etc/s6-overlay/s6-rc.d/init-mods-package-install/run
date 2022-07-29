@@ -11,8 +11,6 @@ if [ -f "/mod-repo-packages-to-install.list" ]; then
         apk add --no-cache \
             $(cat /mod-repo-packages-to-install.list)
     fi
-else
-    echo "**** No repo packages to install, skipping ****"
 fi
 
 if [ -f "/mod-pip-packages-to-install.list" ]; then
