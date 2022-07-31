@@ -5,8 +5,8 @@ apk-tools-2.12.9-r3
 bash-5.1.16-r2
 brotli-libs-1.0.9-r6
 busybox-1.35.0-r16
-ca-certificates-20211220-r0
-ca-certificates-bundle-20211220-r0
+ca-certificates-20220614-r0
+ca-certificates-bundle-20220614-r0
 coreutils-9.1-r0
 curl-7.83.1-r2
 gmp-6.2.1-r2
