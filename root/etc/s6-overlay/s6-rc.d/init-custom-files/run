@@ -1,0 +1,56 @@
+#!/usr/bin/with-contenv bash
+
+# Directories
+SCRIPTS_DIR_OLD="/config/custom-cont-init.d"
+SCRIPTS_DIR="/custom-cont-init.d"
+
+SERVICES_DIR_OLD="/config/custom-services.d"
+
+# chown legacy folders if they exist
+if [ -e "${SCRIPTS_DIR_OLD}" ]; then
+    chown -R 0:0 "${SCRIPTS_DIR_OLD}"
+fi
+
+# chown legacy folders if they exist
+if [ -e "${SERVICES_DIR_OLD}" ]; then
+    chown -R 0:0 "${SERVICES_DIR_OLD}"
+fi
+
+if { [ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; } && \
+    { [ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]; }; then    
+    echo "[custom-init] no custom files found, skipping..."
+    exit 0
+fi
+
+# Make sure custom init directory exists and has files in it
+if { [ -e "${SCRIPTS_DIR}" ] && [ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; }; then
+    if [ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; then
+      echo "[custom-init] files found, executing"
+      for SCRIPT in ${SCRIPTS_DIR}/*; do
+        NAME="$(basename "${SCRIPT}")"
+        if [ -f "${SCRIPT}" ]; then
+          echo "[custom-init] ${NAME}: executing..."
+          /bin/bash "${SCRIPT}"
+          echo "[custom-init] ${NAME}: exited $?"
+        elif [ ! -f "${SCRIPT}" ]; then
+          echo "[custom-init] ${NAME}: is not a file"
+        fi
+      done
+    fi
+fi
+
+if { [ -e "${SCRIPTS_DIR_OLD}" ] && [ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]; }; then
+    if [ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]; then
+      echo "[custom-init] files found, executing"
+      for SCRIPT in ${SCRIPTS_DIR_OLD}/*; do
+        NAME="$(basename "${SCRIPT}")"
+        if [ -f "${SCRIPT}" ]; then
+          echo "[custom-init] ${NAME}: executing..."
+          /bin/bash "${SCRIPT}"
+          echo "[custom-init] ${NAME}: exited $?"
+        elif [ ! -f "${SCRIPT}" ]; then
+          echo "[custom-init] ${NAME}: is not a file"
+        fi
+      done
+    fi
+fi

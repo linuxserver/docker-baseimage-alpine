@@ -7,7 +7,7 @@ echo "[migrations] started"
 
 if [ ! -d $MIGRATIONS_DIR ]; then
   echo "[migrations] no migrations found"
-  exit
+  exit 0
 fi
 
 for MIGRATION in $(ls -1 ${MIGRATIONS_DIR}/* | sort -n); do
