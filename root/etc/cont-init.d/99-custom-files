@@ -1,49 +1,114 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 
 # Directories
-SCRIPTS_DIR="/config/custom-cont-init.d"
-SERVICES_DIR="/config/custom-services.d"
+SCRIPTS_DIR_OLD="/config/custom-cont-init.d"
+SERVICES_DIR_OLD="/config/custom-services.d"
+SCRIPTS_DIR="/custom-cont-init.d"
+SERVICES_DIR="/custom-services.d"
 
 # Remove all existing custom services before continuing to ensure
 # we aren't running anything the user may have removed
-if [ -n "$(/bin/ls -A /etc/services.d/custom-service-* 2>/dev/null)" ]; then
-  echo "[custom-init] removing existing custom services..."
-  rm -rf /etc/services.d/custom-service-*
+if [[ -n "$(/bin/ls -A /etc/s6-overlay/s6-rc.d/custom-svc-* 2>/dev/null)" ]]; then
+    echo "[custom-init] removing existing custom services..."
+    rm -rf /etc/s6-overlay/s6-rc.d/custom-svc-*
 fi
 
-# Make sure custom init directory exists and has files in it
-if ([ -e "${SCRIPTS_DIR}" ] && \
-   [ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]) || \
-   ([ -e "${SERVICES_DIR}" ] && \
-   [ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]); then
-    if [ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]; then
-      echo "[custom-init] files found in ${SCRIPTS_DIR} executing"
-      for SCRIPT in ${SCRIPTS_DIR}/*; do
-        NAME="$(basename "${SCRIPT}")"
-        if [ -f "${SCRIPT}" ]; then
-          echo "[custom-init] ${NAME}: executing..."
-          /bin/bash ${SCRIPT}
-          echo "[custom-init] ${NAME}: exited $?"
-        elif [ ! -f "${SCRIPT}" ]; then
-          echo "[custom-init] ${NAME}: is not a file"
-        fi
-      done
-    fi
-    if [ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]; then
-      echo "[custom-init] service files found in ${SERVICES_DIR}"
-      for SERVICE in ${SERVICES_DIR}/*; do
-        NAME="$(basename "${SERVICE}")"
-        if [ -f "${SERVICE}" ]; then
-          echo "[custom-init] ${NAME}: service detected, copying..."
-          mkdir -p /etc/services.d/custom-service-${NAME}/
-          cp ${SERVICE} /etc/services.d/custom-service-${NAME}/run
-          chmod +x /etc/services.d/custom-service-${NAME}/run
-          echo "[custom-init] ${NAME}: copied"
-        elif [ ! -f "${SERVICE}" ]; then
-          echo "[custom-init] ${NAME}: is not a file"
-        fi
-      done
-    fi
+if [[ -z "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]] &&
+    [[ -z "$(/bin/ls -A ${SERVICES_DIR_OLD} 2>/dev/null)" ]]; then
+    echo "[custom-init] no custom services found, skipping..."
 else
-  echo "[custom-init] no custom files found exiting..."
+    # Make sure custom service directory exists and has files in it
+    if [[ -e "${SERVICES_DIR}" ]] && [[ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]]; then
+        echo "[custom-init] service files found in ${SERVICES_DIR}"
+        for SERVICE in "${SERVICES_DIR}"/*; do
+            NAME="$(basename "${SERVICE}")"
+            if [[ -f "${SERVICE}" ]]; then
+                echo "[custom-init] ${NAME}: service detected, copying..."
+                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/
+                cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
+                chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
+                echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
+                touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
+                touch /etc/s6-overlay/s6-rc.d/init-mods-end/dependencies.d/custom-svc-"${NAME}"
+                echo "[custom-init] ${NAME}: copied"
+            elif [[ ! -f "${SERVICE}" ]]; then
+                echo "[custom-init] ${NAME}: is not a file"
+            fi
+        done
+    fi
+
+    if [[ -e "${SERVICES_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SERVICES_DIR_OLD} 2>/dev/null)" ]]; then
+        echo "[custom-init] service files found in ${SERVICES_DIR_OLD}"
+        for SERVICE in "${SERVICES_DIR_OLD}"/*; do
+            NAME="$(basename "${SERVICE}")"
+            if [[ -f "${SERVICE}" ]]; then
+                echo "[custom-init] ${NAME}: service detected, copying..."
+                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/
+                cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
+                chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
+                echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
+                touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
+                touch /etc/s6-overlay/s6-rc.d/init-mods-end/dependencies.d/custom-svc-"${NAME}"
+                echo "[custom-init] ${NAME}: copied"
+            elif [[ ! -f "${SERVICE}" ]]; then
+                echo "[custom-init] ${NAME}: is not a file"
+            fi
+        done
+    fi
 fi
+
+if [[ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]] &&
+    [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
+    echo "[custom-init] no custom files found, skipping..."
+else
+    # Make sure custom init directory exists and has files in it
+    if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]]; then
+        echo "[custom-init] files found, executing"
+        for SCRIPT in "${SCRIPTS_DIR}"/*; do
+            NAME="$(basename "${SCRIPT}")"
+            if [[ -f "${SCRIPT}" ]]; then
+                echo "[custom-init] ${NAME}: executing..."
+                /bin/bash "${SCRIPT}"
+                echo "[custom-init] ${NAME}: exited $?"
+            elif [[ ! -f "${SCRIPT}" ]]; then
+                echo "[custom-init] ${NAME}: is not a file"
+            fi
+        done
+    fi
+
+    if [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
+        echo "[custom-init] files found, executing"
+        for SCRIPT in "${SCRIPTS_DIR_OLD}"/*; do
+            NAME="$(basename "${SCRIPT}")"
+            if [[ -f "${SCRIPT}" ]]; then
+                echo "[custom-init] ${NAME}: executing..."
+                /bin/bash "${SCRIPT}"
+                echo "[custom-init] ${NAME}: exited $?"
+            elif [[ ! -f "${SCRIPT}" ]]; then
+                echo "[custom-init] ${NAME}: is not a file"
+            fi
+        done
+    fi
+fi
+
+if [[ -n "$(/bin/ls -A "${SCRIPTS_DIR_OLD}" 2>/dev/null)" ]] ||
+    [[ -n "$(/bin/ls -A "${SERVICES_DIR_OLD}" 2>/dev/null)" ]]; then
+    cat <<-EOF | tee ${SCRIPTS_DIR_OLD}/README.txt,${SERVICES_DIR_OLD}/README.txt 2>/dev/null
+    ********************************************************
+    ********************************************************
+    *                                                      *
+    *                         !!!!                         *
+    * Custom scripts or services found in legacy locations *
+    *                         !!!!                         *
+    *    Please move your custom scripts and services      *
+    *    to ${SCRIPTS_DIR} and ${SERVICES_DIR}     *
+    *    respectively to ensure they continue working.     *
+    *                                                      *
+    *  Visit https://linuxserver.io/custom for more info.  *
+    *                                                      *
+    ********************************************************
+    ********************************************************
+EOF
+fi
+exit 0
