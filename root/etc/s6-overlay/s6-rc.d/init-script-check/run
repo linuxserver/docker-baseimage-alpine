@@ -20,3 +20,4 @@ if [[ -n "$(/bin/ls -A "/config/custom-cont-init.d" 2>/dev/null)" ]] ||
     ********************************************************
 EOF
 fi
+exit 0
