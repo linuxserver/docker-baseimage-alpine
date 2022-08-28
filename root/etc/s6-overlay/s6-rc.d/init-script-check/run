@@ -1,12 +1,9 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 
-# This doesn't do anything yet
-
-exit 0
-
-if { [ -n "$(/bin/ls -A "/config/custom-cont-init.d" 2>/dev/null)" ]; } && \
-    { [ -n "$(/bin/ls -A "/config/custom-services.d" 2>/dev/null)" ]; }; then    
-cat <<-EOF | tee /config/custom-cont-init.d/README.txt,/config/custom-services.d/README.txt 2>/dev/null
+if [[ -n "$(/bin/ls -A "/config/custom-cont-init.d" 2>/dev/null)" ]] &&
+    [[ -n "$(/bin/ls -A "/config/custom-services.d" 2>/dev/null)" ]]; then
+    cat <<-EOF | tee /config/custom-cont-init.d/README.txt,/config/custom-services.d/README.txt 2>/dev/null
     ********************************************************
     ********************************************************
     *                                                      *
