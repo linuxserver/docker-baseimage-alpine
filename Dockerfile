@@ -51,9 +51,6 @@ RUN tar -C /root-out -Jxpf /tmp/s6-overlay-symlinks-noarch.tar.xz
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-symlinks-arch.tar.xz /tmp
 RUN tar -C /root-out -Jxpf /tmp/s6-overlay-symlinks-arch.tar.xz
 
-# copy ci-checks
-COPY ci-check/ /root-out/package/admin/s6-overlay-${S6_OVERLAY_VERSION}/etc/s6-rc/sources/top/contents.d
-
 # Runtime stage
 FROM scratch
 COPY --from=rootfs-stage /root-out/ /
