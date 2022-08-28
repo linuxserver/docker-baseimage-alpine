@@ -7,6 +7,23 @@ SCRIPTS_DIR="/custom-cont-init.d"
 
 SERVICES_DIR_OLD="/config/custom-services.d"
 
+# Tamper check legacy custom script locations
+if [[ -d "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(find ${SCRIPTS_DIR_OLD} ! -user root)" ]]; then
+    echo "**** Potential tampering with custom scripts detected ****"
+    randstr=$(
+        tr </dev/urandom -dc _A-Z-a-z-0-9 | head -c8
+        echo
+    )
+    mv "${SCRIPTS_DIR_OLD}" "${SCRIPTS_DIR_OLD}.${randstr}"
+    echo "**** Folder ${SCRIPTS_DIR_OLD} is moved to ${SCRIPTS_DIR_OLD}.${randstr} ****"
+    echo "**** The folder '${SCRIPTS_DIR_OLD}' and its contents need to all be owned by root to prevent root escalation inside the container!!! ****"
+    mkdir -p ${SCRIPTS_DIR_OLD}
+    chown 0:0 ${SCRIPTS_DIR_OLD}
+elif [[ -d "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(find ${SCRIPTS_DIR_OLD} -perm -o+w)" ]]; then
+    echo "**** The folder '${SCRIPTS_DIR_OLD}' or some of its contents have write permissions for others, which is a security risk. ****"
+    echo "**** Please review the permissions of this folder and its contents to make sure they are owned by root, and can only be modified by root. ****"
+fi
+
 # chown legacy folders if they exist
 if [[ -e "${SCRIPTS_DIR_OLD}" ]]; then
     chown -R 0:0 "${SCRIPTS_DIR_OLD}"
