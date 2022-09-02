@@ -9,6 +9,58 @@ set_legacy_executable_bits() {
 }
 set_legacy_executable_bits
 
+SERVICES_DIR_OLD="/config/custom-services.d"
+SERVICES_DIR="/custom-services.d"
+
+# Remove all existing custom services before continuing to ensure
+# we aren't running anything the user may have removed
+if [[ -n "$(/bin/ls -A /etc/s6-overlay/s6-rc.d/custom-svc-* 2>/dev/null)" ]]; then
+    echo "[custom-init] removing existing custom services..."
+    rm -rf /etc/s6-overlay/s6-rc.d/custom-svc-*
+fi
+
+if [[ -z "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]] &&
+    [[ -z "$(/bin/ls -A ${SERVICES_DIR_OLD} 2>/dev/null)" ]]; then
+    echo "[custom-init] no custom services found, skipping..."
+else
+    # Make sure custom service directory exists and has files in it
+    if [[ -e "${SERVICES_DIR}" ]] && [[ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]]; then
+        echo "[custom-init] service files found in ${SERVICES_DIR}"
+        for SERVICE in "${SERVICES_DIR}"/*; do
+            NAME="$(basename "${SERVICE}")"
+            if [[ -f "${SERVICE}" ]]; then
+                echo "[custom-init] ${NAME}: service detected, copying..."
+                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/
+                cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
+                chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
+                echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
+                touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
+                echo "[custom-init] ${NAME}: copied"
+            elif [[ ! -f "${SERVICE}" ]]; then
+                echo "[custom-init] ${NAME}: is not a file"
+            fi
+        done
+    fi
+
+    if [[ -e "${SERVICES_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SERVICES_DIR_OLD} 2>/dev/null)" ]]; then
+        echo "[custom-init] service files found in ${SERVICES_DIR_OLD}"
+        for SERVICE in "${SERVICES_DIR_OLD}"/*; do
+            NAME="$(basename "${SERVICE}")"
+            if [[ -f "${SERVICE}" ]]; then
+                echo "[custom-init] ${NAME}: service detected, copying..."
+                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/
+                cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
+                chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
+                echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
+                touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
+                echo "[custom-init] ${NAME}: copied"
+            elif [[ ! -f "${SERVICE}" ]]; then
+                echo "[custom-init] ${NAME}: is not a file"
+            fi
+        done
+    fi
+fi
+
 # Exit if mods is not set
 if [ -z ${DOCKER_MODS+x} ]; then
   exit 0
