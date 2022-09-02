@@ -7,57 +7,6 @@ SERVICES_DIR_OLD="/config/custom-services.d"
 SCRIPTS_DIR="/custom-cont-init.d"
 SERVICES_DIR="/custom-services.d"
 
-# Remove all existing custom services before continuing to ensure
-# we aren't running anything the user may have removed
-if [[ -n "$(/bin/ls -A /etc/s6-overlay/s6-rc.d/custom-svc-* 2>/dev/null)" ]]; then
-    echo "[custom-init] removing existing custom services..."
-    rm -rf /etc/s6-overlay/s6-rc.d/custom-svc-*
-fi
-
-if [[ -z "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]] &&
-    [[ -z "$(/bin/ls -A ${SERVICES_DIR_OLD} 2>/dev/null)" ]]; then
-    echo "[custom-init] no custom services found, skipping..."
-else
-    # Make sure custom service directory exists and has files in it
-    if [[ -e "${SERVICES_DIR}" ]] && [[ -n "$(/bin/ls -A ${SERVICES_DIR} 2>/dev/null)" ]]; then
-        echo "[custom-init] service files found in ${SERVICES_DIR}"
-        for SERVICE in "${SERVICES_DIR}"/*; do
-            NAME="$(basename "${SERVICE}")"
-            if [[ -f "${SERVICE}" ]]; then
-                echo "[custom-init] ${NAME}: service detected, copying..."
-                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/
-                cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
-                chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
-                echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
-                touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
-                touch /etc/s6-overlay/s6-rc.d/init-mods-end/dependencies.d/custom-svc-"${NAME}"
-                echo "[custom-init] ${NAME}: copied"
-            elif [[ ! -f "${SERVICE}" ]]; then
-                echo "[custom-init] ${NAME}: is not a file"
-            fi
-        done
-    fi
-
-    if [[ -e "${SERVICES_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SERVICES_DIR_OLD} 2>/dev/null)" ]]; then
-        echo "[custom-init] service files found in ${SERVICES_DIR_OLD}"
-        for SERVICE in "${SERVICES_DIR_OLD}"/*; do
-            NAME="$(basename "${SERVICE}")"
-            if [[ -f "${SERVICE}" ]]; then
-                echo "[custom-init] ${NAME}: service detected, copying..."
-                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/
-                cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
-                chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
-                echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
-                touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
-                touch /etc/s6-overlay/s6-rc.d/init-mods-end/dependencies.d/custom-svc-"${NAME}"
-                echo "[custom-init] ${NAME}: copied"
-            elif [[ ! -f "${SERVICE}" ]]; then
-                echo "[custom-init] ${NAME}: is not a file"
-            fi
-        done
-    fi
-fi
-
 if [[ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]] &&
     [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
     echo "[custom-init] no custom files found, skipping..."
@@ -94,7 +43,7 @@ fi
 
 if [[ -n "$(/bin/ls -A "${SCRIPTS_DIR_OLD}" 2>/dev/null)" ]] ||
     [[ -n "$(/bin/ls -A "${SERVICES_DIR_OLD}" 2>/dev/null)" ]]; then
-    cat <<-EOF | tee ${SCRIPTS_DIR_OLD}/README.txt,${SERVICES_DIR_OLD}/README.txt 2>/dev/null
+    cat << EOF | tee {${SCRIPTS_DIR_OLD}/README.txt,${SERVICES_DIR_OLD}/README.txt} 2>/dev/null
     ********************************************************
     ********************************************************
     *                                                      *
