@@ -91,12 +91,11 @@ process_custom_services() {
             NAME="$(basename "${SERVICE}")"
             if [[ -f "${SERVICE}" ]]; then
                 echo "[custom-init] ${NAME}: service detected, copying..."
-                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/
+                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/
                 cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
                 chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
                 echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
                 touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
-                touch /etc/s6-overlay/s6-rc.d/init-mods-end/dependencies.d/custom-svc-"${NAME}"
                 echo "[custom-init] ${NAME}: copied"
             elif [[ ! -f "${SERVICE}" ]]; then
                 echo "[custom-init] ${NAME}: is not a file"
@@ -110,12 +109,11 @@ process_custom_services() {
             NAME="$(basename "${SERVICE}")"
             if [[ -f "${SERVICE}" ]]; then
                 echo "[custom-init] ${NAME}: service detected, copying..."
-                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/
+                mkdir -p /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/
                 cp "${SERVICE}" /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
                 chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
                 echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
                 touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
-                touch /etc/s6-overlay/s6-rc.d/init-mods-end/dependencies.d/custom-svc-"${NAME}"
                 echo "[custom-init] ${NAME}: copied"
             elif [[ ! -f "${SERVICE}" ]]; then
                 echo "[custom-init] ${NAME}: is not a file"
