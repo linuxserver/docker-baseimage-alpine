@@ -35,6 +35,7 @@ else
                 chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
                 echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
                 touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
+                touch /etc/s6-overlay/s6-rc.d/user/contents.d/custom-svc-"${NAME}"
                 echo "[custom-init] ${NAME}: copied"
             elif [[ ! -f "${SERVICE}" ]]; then
                 echo "[custom-init] ${NAME}: is not a file"
@@ -53,6 +54,7 @@ else
                 chmod +x /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/run
                 echo "longrun" >/etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/type
                 touch /etc/s6-overlay/s6-rc.d/custom-svc-"${NAME}"/dependencies.d/init-services
+                touch /etc/s6-overlay/s6-rc.d/user/contents.d/custom-svc-"${NAME}"
                 echo "[custom-init] ${NAME}: copied"
             elif [[ ! -f "${SERVICE}" ]]; then
                 echo "[custom-init] ${NAME}: is not a file"
