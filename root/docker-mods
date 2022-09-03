@@ -130,6 +130,7 @@ curl_check() {
         echo "[mod-init] Curl/JQ was not found on this system for Docker mods installing"
         if [[ -f /usr/bin/apt ]]; then
             ## Ubuntu
+            export DEBIAN_FRONTEND="noninteractive"
             apt-get update
             apt-get install --no-install-recommends -y \
                 curl \
