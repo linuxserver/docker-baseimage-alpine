@@ -27,7 +27,7 @@ if [[ -f "/mod-pip-packages-to-install.list" ]]; then
             PIP_ARGS="-f https://wheel-index.linuxserver.io/alpine-${ALPINE_VER}/"
         fi
     fi
-    python3 -m pip install "${PIP_ARGS}" \
+    python3 -m pip install ${PIP_ARGS} \
         $(cat /mod-pip-packages-to-install.list)
 fi
 
