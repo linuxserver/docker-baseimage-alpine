@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-mapfile -t REPO_PACKAGES < <(cat /mod-repo-packages-to-install.list)
+mapfile -t REPO_PACKAGES < <(cat /mod-repo-packages-to-install.list 2> /dev/null || true)
 if [[ ${#REPO_PACKAGES[@]} -ne 0 ]] && [[ ${REPO_PACKAGES[*]} != "" ]]; then
     echo "**** Installing all mod packages ****"
     if [[ -f /usr/bin/apt ]]; then
@@ -15,7 +15,7 @@ if [[ ${#REPO_PACKAGES[@]} -ne 0 ]] && [[ ${REPO_PACKAGES[*]} != "" ]]; then
     fi
 fi
 
-mapfile -t PIP_PACKAGES < <(cat /mod-pip-packages-to-install.list)
+mapfile -t PIP_PACKAGES < <(cat /mod-pip-packages-to-install.list 2> /dev/null || true)
 if [[ ${#PIP_PACKAGES[@]} -ne 0 ]] && [[ ${PIP_PACKAGES[*]} != "" ]]; then
     echo "**** Installing all pip packages ****"
     python3 -m pip install -U pip wheel setuptools
