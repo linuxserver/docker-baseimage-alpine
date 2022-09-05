@@ -86,6 +86,8 @@ process_custom_services() {
                 echo "[custom-init] ${NAME}: is not a file"
             fi
         done
+    else
+        echo "[custom-init] No custom services found, skipping..."
     fi
 
     # Remove legacy folder if it's empty
@@ -122,7 +124,12 @@ process_custom_services_legacy() {
                 echo "[custom-init] ${NAME}: is not a file"
             fi
         done
-    elif [[ -e "${SERVICES_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SERVICES_DIR_OLD} 2>/dev/null)" ]]; then
+    else
+        echo "[custom-init] No custom services found, skipping..."
+    fi        
+
+    # Remove legacy folder if it's empty    
+    if [[ -e "${SERVICES_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SERVICES_DIR_OLD} 2>/dev/null)" ]]; then
         echo "[custom-init] Legacy service folder ${SERVICES_DIR_OLD} is empty, deleting..."
         rm -rf "${SERVICES_DIR_OLD}"
     fi
