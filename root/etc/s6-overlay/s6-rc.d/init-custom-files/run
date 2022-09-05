@@ -17,15 +17,9 @@ if [[ -e "${SERVICES_DIR_OLD}" ]]; then
     chown -R 0:0 "${SERVICES_DIR_OLD}"
 fi
 
-if [[ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]] &&
-    [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
-    echo "[custom-init] no custom files found, skipping..."
-    exit 0
-fi
-
 # Make sure custom init directory exists and has files in it
 if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]]; then
-    echo "[custom-init] files found, executing"
+    echo "[custom-init] Files found, executing"
     for SCRIPT in "${SCRIPTS_DIR}"/*; do
         NAME="$(basename "${SCRIPT}")"
         if [[ -f "${SCRIPT}" ]]; then
@@ -36,10 +30,14 @@ if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)"
             echo "[custom-init] ${NAME}: is not a file"
         fi
     done
-fi
 
-if [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
-    echo "[custom-init] files found, executing"
+    # Remove legacy folder if it's empty
+    if [[ -e "${SCRIPTS_DIR}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]]; then
+        echo "[custom-init] Legacy service folder ${SCRIPTS_DIR} is empty, deleting..."
+        rm -rf "${SCRIPTS_DIR}"
+    fi 
+elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
+    echo "[custom-init] Files found, executing"
     for SCRIPT in "${SCRIPTS_DIR_OLD}"/*; do
         NAME="$(basename "${SCRIPT}")"
         if [[ -f "${SCRIPT}" ]]; then
@@ -50,4 +48,9 @@ if [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/de
             echo "[custom-init] ${NAME}: is not a file"
         fi
     done
+elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
+    echo "[custom-init] Legacy files folder ${SCRIPTS_DIR_OLD} is empty, deleting..."
+    rm -rf "${SCRIPTS_DIR_OLD}"
+else
+    echo "[custom-init] No custom files found, skipping..."
 fi
