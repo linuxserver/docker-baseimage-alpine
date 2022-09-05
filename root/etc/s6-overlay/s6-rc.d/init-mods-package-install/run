@@ -7,10 +7,10 @@ if [[ -f "/mod-repo-packages-to-install.list" ]]; then
         export DEBIAN_FRONTEND="noninteractive"
         apt-get update
         apt-get install -y --no-install-recommends \
-            "$(cat /mod-repo-packages-to-install.list)"
+            $(cat /mod-repo-packages-to-install.list)
     elif [[ -f /sbin/apk ]]; then
         apk add --no-cache \
-            "$(cat /mod-repo-packages-to-install.list)"
+            $(cat /mod-repo-packages-to-install.list)
     fi
 fi
 
@@ -28,7 +28,7 @@ if [[ -f "/mod-pip-packages-to-install.list" ]]; then
         fi
     fi
     python3 -m pip install "${PIP_ARGS}" \
-        "$(cat /mod-pip-packages-to-install.list)"
+        $(cat /mod-pip-packages-to-install.list)
 fi
 
 rm -rf \
