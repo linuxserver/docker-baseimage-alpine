@@ -31,7 +31,7 @@ tamper_check() {
 tamper_check_legacy() {
     # Tamper check custom script locations
     if [[ -d "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(find ${SCRIPTS_DIR_OLD} ! -user root)" ]]; then
-        echo "**** Potential tampering with custom scripts detected ****"
+        echo "[custom-init] **** Potential tampering with custom scripts detected ****"
         randstr=$(
             tr </dev/urandom -dc _A-Z-a-z-0-9 | head -c8
             echo
