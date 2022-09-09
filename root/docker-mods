@@ -270,7 +270,7 @@ run_mods() {
 
 # Main script loop
 
-if [ ! -d "/custom-cont-init.d" ] && [ ! -d "/custom-services.d" ]; then
+if [ ! -d "${SCRIPTS_DIR}" ] && [ ! -d "${SERVICES_DIR}" ]; then
     # Tamper check legacy custom folders
     tamper_check_legacy
     process_custom_services_legacy
