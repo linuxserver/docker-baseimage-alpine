@@ -32,9 +32,9 @@ if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)"
     done
 
     # Remove legacy folder if it's empty
-    if [[ -e "${SCRIPTS_DIR}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]]; then
-        echo "[custom-init] Legacy service folder ${SCRIPTS_DIR} is empty, deleting..."
-        rm -rf "${SCRIPTS_DIR}"
+    if [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
+        echo "[custom-init] Legacy files folder ${SCRIPTS_DIR_OLD} is empty, deleting..."
+        rm -rf "${SCRIPTS_DIR_OLD}"
     fi     
 elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
     echo "[custom-init] Files found, executing"
