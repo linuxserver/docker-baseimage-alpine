@@ -3,61 +3,75 @@
 
 # Directories
 SCRIPTS_DIR_OLD="/config/custom-cont-init.d"
-SERVICES_DIR_OLD="/config/custom-services.d"
 SCRIPTS_DIR="/custom-cont-init.d"
+SERVICES_DIR_OLD="/config/custom-services.d"
 SERVICES_DIR="/custom-services.d"
 
-if [[ -z "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]] &&
-    [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
-    echo "[custom-init] no custom files found, skipping..."
-else
-    # Make sure custom init directory exists and has files in it
-    if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]]; then
-        echo "[custom-init] files found, executing"
-        for SCRIPT in "${SCRIPTS_DIR}"/*; do
-            NAME="$(basename "${SCRIPT}")"
-            if [[ -f "${SCRIPT}" ]]; then
-                echo "[custom-init] ${NAME}: executing..."
-                /bin/bash "${SCRIPT}"
-                echo "[custom-init] ${NAME}: exited $?"
-            elif [[ ! -f "${SCRIPT}" ]]; then
-                echo "[custom-init] ${NAME}: is not a file"
-            fi
-        done
-    fi
+# chown legacy folders if they exist
+if [[ -e "${SCRIPTS_DIR_OLD}" ]]; then
+    chown -R 0:0 "${SCRIPTS_DIR_OLD}"
+fi
 
-    if [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
-        echo "[custom-init] files found, executing"
-        for SCRIPT in "${SCRIPTS_DIR_OLD}"/*; do
-            NAME="$(basename "${SCRIPT}")"
-            if [[ -f "${SCRIPT}" ]]; then
-                echo "[custom-init] ${NAME}: executing..."
-                /bin/bash "${SCRIPT}"
-                echo "[custom-init] ${NAME}: exited $?"
-            elif [[ ! -f "${SCRIPT}" ]]; then
-                echo "[custom-init] ${NAME}: is not a file"
-            fi
-        done
-    fi
+# chown legacy folders if they exist
+if [[ -e "${SERVICES_DIR_OLD}" ]]; then
+    chown -R 0:0 "${SERVICES_DIR_OLD}"
+fi
+
+# Make sure custom init directory exists and has files in it
+if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]]; then
+    echo "[custom-init] Files found, executing"
+    for SCRIPT in "${SCRIPTS_DIR}"/*; do
+        NAME="$(basename "${SCRIPT}")"
+        if [[ -f "${SCRIPT}" ]]; then
+            echo "[custom-init] ${NAME}: executing..."
+            /bin/bash "${SCRIPT}"
+            echo "[custom-init] ${NAME}: exited $?"
+        elif [[ ! -f "${SCRIPT}" ]]; then
+            echo "[custom-init] ${NAME}: is not a file"
+        fi
+    done
+
+    # Remove legacy folder if it's empty
+    if [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
+        echo "[custom-init] Legacy files folder ${SCRIPTS_DIR_OLD} is empty, deleting..."
+        rm -rf "${SCRIPTS_DIR_OLD}"
+    fi     
+elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
+    echo "[custom-init] Files found, executing"
+    for SCRIPT in "${SCRIPTS_DIR_OLD}"/*; do
+        NAME="$(basename "${SCRIPT}")"
+        if [[ -f "${SCRIPT}" ]]; then
+            echo "[custom-init] ${NAME}: executing..."
+            /bin/bash "${SCRIPT}"
+            echo "[custom-init] ${NAME}: exited $?"
+        elif [[ ! -f "${SCRIPT}" ]]; then
+            echo "[custom-init] ${NAME}: is not a file"
+        fi
+    done
+elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
+    echo "[custom-init] Legacy files folder ${SCRIPTS_DIR_OLD} is empty, deleting..."
+    rm -rf "${SCRIPTS_DIR_OLD}"
+else
+    echo "[custom-init] No custom files found, skipping..."
 fi
 
 if [[ -n "$(/bin/ls -A "${SCRIPTS_DIR_OLD}" 2>/dev/null)" ]] ||
     [[ -n "$(/bin/ls -A "${SERVICES_DIR_OLD}" 2>/dev/null)" ]]; then
     cat << EOF | tee {${SCRIPTS_DIR_OLD}/README.txt,${SERVICES_DIR_OLD}/README.txt} 2>/dev/null
-    ********************************************************
-    ********************************************************
-    *                                                      *
-    *                         !!!!                         *
-    * Custom scripts or services found in legacy locations *
-    *                         !!!!                         *
-    *    Please move your custom scripts and services      *
-    *    to ${SCRIPTS_DIR} and ${SERVICES_DIR}     *
-    *    respectively to ensure they continue working.     *
-    *                                                      *
-    *  Visit https://linuxserver.io/custom for more info.  *
-    *                                                      *
-    ********************************************************
-    ********************************************************
+********************************************************
+********************************************************
+*                                                      *
+*                         !!!!                         *
+* Custom scripts or services found in legacy locations *
+*                         !!!!                         *
+*    Please move your custom scripts and services      *
+*    to ${SCRIPTS_DIR} and ${SERVICES_DIR}     *
+*    respectively to ensure they continue working.     *
+*                                                      *
+*  Visit https://linuxserver.io/custom for more info.  *
+*                                                      *
+********************************************************
+********************************************************
 EOF
 fi
 exit 0
