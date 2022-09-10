@@ -1,5 +1,6 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
+# shellcheck shell=bash
 
 if [[ -f "/mod-repo-packages-to-install.list" ]]; then
     IFS=' ' read -ra REPO_PACKAGES <<< "$(cat /mod-repo-packages-to-install.list)"
