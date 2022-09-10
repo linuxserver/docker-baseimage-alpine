@@ -1,33 +1,42 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 
-if [ -f "/mod-repo-packages-to-install.list" ]; then
-    echo "**** Installing all mod packages ****"
-    if [ -f /usr/bin/apt ]; then
-        export DEBIAN_FRONTEND="noninteractive"
-        apt-get update
-        apt-get install -y --no-install-recommends \
-            $(cat /mod-repo-packages-to-install.list)
-    elif [ -f /sbin/apk ]; then
-        apk add --no-cache \
-            $(cat /mod-repo-packages-to-install.list)
+if [[ -f "/mod-repo-packages-to-install.list" ]]; then
+    IFS=' ' read -ra REPO_PACKAGES <<< "$(tr '\n' ' ' < /mod-repo-packages-to-install.list)"
+    if [[ ${#REPO_PACKAGES[@]} -ne 0 ]] && [[ ${REPO_PACKAGES[*]} != "" ]]; then
+        echo "**** Installing all mod packages ****"
+        if [[ -f /usr/bin/apt ]]; then
+            export DEBIAN_FRONTEND="noninteractive"
+            apt-get update
+            apt-get install -y --no-install-recommends \
+                "${REPO_PACKAGES[@]}"
+        elif [[ -f /sbin/apk ]]; then
+            apk add --no-cache \
+                "${REPO_PACKAGES[@]}"
+        fi
     fi
 fi
 
-if [ -f "/mod-pip-packages-to-install.list" ]; then
-    echo "**** Installing all pip packages ****"
-    python3 -m pip install -U pip wheel setuptools
-    if [ -f /usr/bin/apt ]; then
-        PIP_ARGS="-f https://wheel-index.linuxserver.io/ubuntu/"
-    elif [ -f /sbin/apk ]; then
-        ALPINE_VER=$(grep main /etc/apk/repositories | sed 's|.*alpine/v||' | sed 's|/main.*||')
-        if [ "${ALPINE_VER}" = "3.14" ]; then
-            PIP_ARGS="-f https://wheel-index.linuxserver.io/alpine/"
-        else
-            PIP_ARGS="-f https://wheel-index.linuxserver.io/alpine-${ALPINE_VER}/"
+if [[ -f "/mod-pip-packages-to-install.list" ]]; then
+    IFS=' ' read -ra PIP_PACKAGES <<< "$(tr '\n' ' ' < /mod-pip-packages-to-install.list)"
+    if [[ ${#PIP_PACKAGES[@]} -ne 0 ]] && [[ ${PIP_PACKAGES[*]} != "" ]]; then
+        echo "**** Installing all pip packages ****"
+        python3 -m pip install -U pip wheel setuptools
+        PIP_ARGS=()
+        if [[ -f /usr/bin/apt ]]; then
+            PIP_ARGS+=("-f" "https://wheel-index.linuxserver.io/ubuntu/")
+        elif [[ -f /sbin/apk ]]; then
+            ALPINE_VER=$(grep main /etc/apk/repositories | sed 's|.*alpine/v||' | sed 's|/main.*||')
+            if [[ "${ALPINE_VER}" = "3.14" ]]; then
+                PIP_ARGS+=("-f" "https://wheel-index.linuxserver.io/alpine/")
+            else
+                PIP_ARGS+=("-f" "https://wheel-index.linuxserver.io/alpine-${ALPINE_VER}/")
+            fi
         fi
+        python3 -m pip install \
+            "${PIP_ARGS[@]}" \
+            "${PIP_PACKAGES[@]}"
     fi
-    python3 -m pip install ${PIP_ARGS} \
-        $(cat /mod-pip-packages-to-install.list)
 fi
 
 rm -rf \
