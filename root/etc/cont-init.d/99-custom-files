@@ -57,7 +57,7 @@ fi
 
 if [[ -n "$(/bin/ls -A "${SCRIPTS_DIR_OLD}" 2>/dev/null)" ]] ||
     [[ -n "$(/bin/ls -A "${SERVICES_DIR_OLD}" 2>/dev/null)" ]]; then
-    cat << EOF | tee {${SCRIPTS_DIR_OLD}/README.txt,${SERVICES_DIR_OLD}/README.txt} 2>/dev/null
+    cat << EOF | tee ${SCRIPTS_DIR_OLD}/README.txt 2>/dev/null
 ********************************************************
 ********************************************************
 *                                                      *
