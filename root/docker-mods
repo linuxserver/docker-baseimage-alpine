@@ -17,18 +17,18 @@ set_legacy_executable_bits() {
 
 tamper_check() {
     #Tamper check custom service locations
-    if [[ -d "${SERVICES_DIR}" ]] && [[ -n "$(find ${SERVICES_DIR}/* ! -user root)" ]]; then
+    if [[ -d "${SERVICES_DIR}" ]] && [[ -n "$(find ${SERVICES_DIR}/* ! -user root 2>/dev/null)" ]]; then
         echo "[custom-init] **** Some of the contents of the folder '${SERVICES_DIR}' are not owned by root, which is a security risk. ****"
         echo "[custom-init] **** Please review the permissions of this folder and its contents to make sure they are owned by root, and can only be modified by root. ****"
-    elif [[ -d "${SERVICES_DIR}" ]] && [[ -n "$(find ${SERVICES_DIR}/* -perm -o+w)" ]]; then
+    elif [[ -d "${SERVICES_DIR}" ]] && [[ -n "$(find ${SERVICES_DIR}/* -perm -o+w 2>/dev/null)" ]]; then
         echo "[custom-init] **** Some of the contents of the folder '${SERVICES_DIR}' have write permissions for others, which is a security risk. ****"
         echo "[custom-init] **** Please review the permissions of this folder and its contents to make sure they are owned by root, and can only be modified by root. ****"
     fi
     #Tamper check custom script locations
-    if [[ -d "${SCRIPTS_DIR}" ]] && [[ -n "$(find ${SCRIPTS_DIR}/* ! -user root)" ]]; then
+    if [[ -d "${SCRIPTS_DIR}" ]] && [[ -n "$(find ${SCRIPTS_DIR}/* ! -user root 2>/dev/null)" ]]; then
         echo "[custom-init] **** Some of the contents of the folder '${SCRIPTS_DIR}' are not owned by root, which is a security risk. ****"
         echo "[custom-init] **** Please review the permissions of this folder and its contents to make sure they are owned by root, and can only be modified by root. ****"
-    elif [[ -d "${SCRIPTS_DIR}" ]] && [[ -n "$(find ${SCRIPTS_DIR}/* -perm -o+w)" ]]; then
+    elif [[ -d "${SCRIPTS_DIR}" ]] && [[ -n "$(find ${SCRIPTS_DIR}/* -perm -o+w 2>/dev/null)" ]]; then
         echo "[custom-init] **** Some of the contents of the folder '${SCRIPTS_DIR}' have write permissions for others, which is a security risk. ****"
         echo "[custom-init] **** Please review the permissions of this folder and its contents to make sure they are owned by root, and can only be modified by root. ****"
     fi
@@ -36,7 +36,7 @@ tamper_check() {
 
 tamper_check_legacy() {
     # Tamper check custom script locations
-    if [[ -d "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(find ${SCRIPTS_DIR_OLD} ! -user root)" ]]; then
+    if [[ -d "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(find ${SCRIPTS_DIR_OLD} ! -user root 2>/dev/null)" ]]; then
         echo "[custom-init] **** Potential tampering with custom scripts detected ****"
         randstr=$(
             tr </dev/urandom -dc _A-Z-a-z-0-9 | head -c8
@@ -45,13 +45,13 @@ tamper_check_legacy() {
         mv "${SCRIPTS_DIR_OLD}" "${SCRIPTS_DIR_OLD}.${randstr}"
         echo "[custom-init] **** Folder ${SCRIPTS_DIR_OLD} is moved to ${SCRIPTS_DIR_OLD}.${randstr} ****"
         echo "[custom-init] **** The folder '${SCRIPTS_DIR_OLD}' and its contents need to all be owned by root to prevent root escalation inside the container!!! ****"
-    elif [[ -d "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(find ${SCRIPTS_DIR_OLD} -perm -o+w)" ]]; then
+    elif [[ -d "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(find ${SCRIPTS_DIR_OLD} -perm -o+w 2>/dev/null)" ]]; then
         echo "[custom-init] **** The folder '${SCRIPTS_DIR_OLD}' or some of its contents have write permissions for others, which is a security risk. ****"
         echo "[custom-init] **** Please review the permissions of this folder and its contents to make sure they are owned by root, and can only be modified by root. ****"
     fi
 
     # Tamper check custom service locations
-    if [[ -d "${SERVICES_DIR_OLD}" ]] && [[ -n "$(find ${SERVICES_DIR_OLD} ! -user root)" ]]; then
+    if [[ -d "${SERVICES_DIR_OLD}" ]] && [[ -n "$(find ${SERVICES_DIR_OLD} ! -user root 2>/dev/null)" ]]; then
         echo "[custom-init] **** Potential tampering with custom scripts detected ****"
         randstr=$(
             tr </dev/urandom -dc _A-Z-a-z-0-9 | head -c8
@@ -60,7 +60,7 @@ tamper_check_legacy() {
         mv "${SERVICES_DIR_OLD}" "${SERVICES_DIR_OLD}.${randstr}"
         echo "[custom-init] **** Folder ${SERVICES_DIR_OLD} is moved to ${SERVICES_DIR_OLD}.${randstr} ****"
         echo "[custom-init] **** The folder '${SERVICES_DIR_OLD}' and its contents need to all be owned by root to prevent root escalation inside the container!!! ****"
-    elif [[ -d "${SERVICES_DIR_OLD}" ]] && [[ -n "$(find ${SERVICES_DIR_OLD} -perm -o+w)" ]]; then
+    elif [[ -d "${SERVICES_DIR_OLD}" ]] && [[ -n "$(find ${SERVICES_DIR_OLD} -perm -o+w 2>/dev/null)" ]]; then
         echo "[custom-init] **** The folder '${SERVICES_DIR_OLD}' or some of its contents have write permissions for others, which is a security risk. ****"
         echo "[custom-init] **** Please review the permissions of this folder and its contents to make sure they are owned by root, and can only be modified by root. ****"
     fi
