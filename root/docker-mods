@@ -72,6 +72,7 @@ process_custom_services() {
     if [[ -n "$(/bin/ls -A /etc/s6-overlay/s6-rc.d/custom-svc-* 2>/dev/null)" ]]; then
         echo "[custom-init] removing existing custom services..."
         rm -rf /etc/s6-overlay/s6-rc.d/custom-svc-*
+        rm /etc/s6-overlay/s6-rc.d/user/contents.d/custom-svc-*
     fi
 
     # Make sure custom service directory exists and has files in it
