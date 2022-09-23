@@ -4,7 +4,7 @@
 if [[ -f "/mod-repo-packages-to-install.list" ]]; then
     IFS=' ' read -ra REPO_PACKAGES <<< "$(tr '\n' ' ' < /mod-repo-packages-to-install.list)"
     if [[ ${#REPO_PACKAGES[@]} -ne 0 ]] && [[ ${REPO_PACKAGES[*]} != "" ]]; then
-        echo "**** Installing all mod packages ****"
+        echo "[mod-init] **** Installing all mod packages ****"
         if [[ -f /usr/bin/apt ]]; then
             export DEBIAN_FRONTEND="noninteractive"
             apt-get update
@@ -20,7 +20,7 @@ fi
 if [[ -f "/mod-pip-packages-to-install.list" ]]; then
     IFS=' ' read -ra PIP_PACKAGES <<< "$(tr '\n' ' ' < /mod-pip-packages-to-install.list)"
     if [[ ${#PIP_PACKAGES[@]} -ne 0 ]] && [[ ${PIP_PACKAGES[*]} != "" ]]; then
-        echo "**** Installing all pip packages ****"
+        echo "[mod-init] **** Installing all pip packages ****"
         python3 -m pip install -U pip wheel setuptools
         PIP_ARGS=()
         if [[ -f /usr/bin/apt ]]; then

@@ -4,8 +4,8 @@
 # Directories
 SCRIPTS_DIR_OLD="/config/custom-cont-init.d"
 SCRIPTS_DIR="/custom-cont-init.d"
+
 SERVICES_DIR_OLD="/config/custom-services.d"
-SERVICES_DIR="/custom-services.d"
 
 # chown legacy folders if they exist
 if [[ -e "${SCRIPTS_DIR_OLD}" ]]; then
@@ -35,7 +35,7 @@ if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)"
     if [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
         echo "[custom-init] Legacy files folder ${SCRIPTS_DIR_OLD} is empty, deleting..."
         rm -rf "${SCRIPTS_DIR_OLD}"
-    fi     
+    fi 
 elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
     echo "[custom-init] Files found, executing"
     for SCRIPT in "${SCRIPTS_DIR_OLD}"/*; do
@@ -54,24 +54,3 @@ elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/
 else
     echo "[custom-init] No custom files found, skipping..."
 fi
-
-if [[ -n "$(/bin/ls -A "${SCRIPTS_DIR_OLD}" 2>/dev/null)" ]] ||
-    [[ -n "$(/bin/ls -A "${SERVICES_DIR_OLD}" 2>/dev/null)" ]]; then
-    cat << EOF | tee ${SCRIPTS_DIR_OLD}/README.txt 2>/dev/null
-********************************************************
-********************************************************
-*                                                      *
-*                         !!!!                         *
-* Custom scripts or services found in legacy locations *
-*                         !!!!                         *
-*    Please move your custom scripts and services      *
-*    to ${SCRIPTS_DIR} and ${SERVICES_DIR}     *
-*    respectively to ensure they continue working.     *
-*                                                      *
-*  Visit https://linuxserver.io/custom for more info.  *
-*                                                      *
-********************************************************
-********************************************************
-EOF
-fi
-exit 0
