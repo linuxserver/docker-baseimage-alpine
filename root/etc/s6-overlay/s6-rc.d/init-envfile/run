@@ -1,8 +1,8 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-if find /var/run/s6/container_environment/*"FILE__"* -maxdepth 1 > /dev/null 2>&1; then
-    for FILENAME in /var/run/s6/container_environment/*; do
+if find /run/s6/container_environment/*"FILE__"* -maxdepth 1 > /dev/null 2>&1; then
+    for FILENAME in /run/s6/container_environment/*; do
         if [[ "${FILENAME##*/}" == "FILE__"* ]]; then
             SECRETFILE=$(cat "${FILENAME}")
             if [[ -f ${SECRETFILE} ]]; then
