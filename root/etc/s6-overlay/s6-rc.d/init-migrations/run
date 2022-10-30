@@ -19,10 +19,9 @@ for MIGRATION in $(find ${MIGRATIONS_DIR}/* | sort -n); do
     fi
     echo "[migrations] ${NAME}: executing..."
     chmod +x "${MIGRATION}"
-    EXIT_CODE=$(
-        /bin/bash "${MIGRATION}"
-        echo $?
-    )
+    # Execute migration script in a subshell to prevent it from modifying the current environment
+    ("${MIGRATION}")
+    EXIT_CODE=$?
     if [[ ${EXIT_CODE} -ne 0 ]]; then
         echo "[migrations] ${NAME}: failed with exit code ${EXIT_CODE}, contact support"
         exit "${EXIT_CODE}"
