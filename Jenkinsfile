@@ -875,7 +875,7 @@ pipeline {
                      "target_commitish": "3.16",\
                      "name": "'${META_TAG}'",\
                      "body": "**LinuxServer Changes:**\\n\\n'${LS_RELEASE_NOTES}'\\n\\n**OS Changes:**\\n\\n' > start
-              printf '","draft": false,"prerelease": false}' >> releasebody.json
+              printf '","draft": false,"prerelease": true}' >> releasebody.json
               paste -d'\\0' start releasebody.json > releasebody.json.done
               curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST https://api.github.com/repos/${LS_USER}/${LS_REPO}/releases -d @releasebody.json.done'''
       }
