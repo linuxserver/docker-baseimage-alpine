@@ -91,7 +91,6 @@ RUN \
     /app \
     /config \
     /defaults && \
-  chmod +x /docker-mods && \
   echo "**** add qemu ****" && \
   curl -o \
     /usr/bin/qemu-arm-static -L \

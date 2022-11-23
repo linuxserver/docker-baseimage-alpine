@@ -91,7 +91,6 @@ RUN \
     /app \
     /config \
     /defaults && \
-  chmod +x /docker-mods && \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*
