@@ -3,7 +3,7 @@ alpine-baselayout-data-3.4.0-r0
 alpine-keys-2.4-r1
 apk-tools-2.12.10-r1
 bash-5.2.9-r0
-brotli-libs-1.0.9-r9
+brotli-libs-1.0.9-r10
 busybox-1.35.0-r29
 busybox-binsh-1.35.0-r29
 ca-certificates-20220614-r2
