@@ -75,6 +75,7 @@ S6_STAGE2_HOOK=/docker-mods
 RUN \
   echo "**** install runtime packages ****" && \
   apk add --no-cache \
+    alpine-release \
     bash \
     ca-certificates \
     coreutils \
