@@ -18,8 +18,6 @@ RUN \
   apk add --no-cache \
     bash \
     curl \
-    patch \
-    tar \
     tzdata \
     xz
 
