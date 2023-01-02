@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM alpine:3.15 as rootfs-stage
+FROM alpine:3.17 as rootfs-stage
 
 # environment
 ENV REL=edge
@@ -18,8 +18,6 @@ RUN \
   apk add --no-cache \
     bash \
     curl \
-    patch \
-    tar \
     tzdata \
     xz
 
