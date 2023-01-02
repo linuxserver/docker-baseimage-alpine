@@ -2,20 +2,7 @@
 # shellcheck shell=bash
 
 # Directories
-SCRIPTS_DIR_OLD="/config/custom-cont-init.d"
 SCRIPTS_DIR="/custom-cont-init.d"
-
-SERVICES_DIR_OLD="/config/custom-services.d"
-
-# chown legacy folders if they exist
-if [[ -e "${SCRIPTS_DIR_OLD}" ]]; then
-    chown -R 0:0 "${SCRIPTS_DIR_OLD}"
-fi
-
-# chown legacy folders if they exist
-if [[ -e "${SERVICES_DIR_OLD}" ]]; then
-    chown -R 0:0 "${SERVICES_DIR_OLD}"
-fi
 
 # Make sure custom init directory exists and has files in it
 if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)" ]]; then
@@ -30,27 +17,6 @@ if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)"
             echo "[custom-init] ${NAME}: is not a file"
         fi
     done
-
-    # Remove legacy folder if it's empty
-    if [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
-        echo "[custom-init] Legacy files folder ${SCRIPTS_DIR_OLD} is empty, deleting..."
-        rm -rf "${SCRIPTS_DIR_OLD}"
-    fi 
-elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
-    echo "[custom-init] Files found, executing"
-    for SCRIPT in "${SCRIPTS_DIR_OLD}"/*; do
-        NAME="$(basename "${SCRIPT}")"
-        if [[ -f "${SCRIPT}" ]]; then
-            echo "[custom-init] ${NAME}: executing..."
-            /bin/bash "${SCRIPT}"
-            echo "[custom-init] ${NAME}: exited $?"
-        elif [[ ! -f "${SCRIPT}" ]]; then
-            echo "[custom-init] ${NAME}: is not a file"
-        fi
-    done
-elif [[ -e "${SCRIPTS_DIR_OLD}" ]] && [[ -z "$(/bin/ls -A ${SCRIPTS_DIR_OLD} 2>/dev/null)" ]]; then
-    echo "[custom-init] Legacy files folder ${SCRIPTS_DIR_OLD} is empty, deleting..."
-    rm -rf "${SCRIPTS_DIR_OLD}"
 else
     echo "[custom-init] No custom files found, skipping..."
 fi
