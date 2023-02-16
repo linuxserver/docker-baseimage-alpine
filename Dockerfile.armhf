@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
 
-FROM alpine:3.17 as rootfs-stage
+FROM alpine:3 as rootfs-stage
 
 # environment
+ENV ROOTFS=/root-out
 ENV REL=edge
 ENV ARCH=armv7
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
@@ -10,29 +11,22 @@ ENV PACKAGES=alpine-baselayout,\
 alpine-keys,\
 apk-tools,\
 busybox,\
-libc-utils,\
-xz
+libc-utils
 
 # install packages
 RUN \
   apk add --no-cache \
     bash \
-    curl \
-    tzdata \
     xz
 
-# fetch builder script from gliderlabs
+# build rootfs
 RUN \
-  curl -o \
-    /mkimage-alpine.bash -L \
-    https://raw.githubusercontent.com/gliderlabs/docker-alpine/master/builder/scripts/mkimage-alpine.bash && \
-  chmod +x \
-    /mkimage-alpine.bash && \
-  ./mkimage-alpine.bash  && \
-  mkdir /root-out && \
-  tar xf \
-    /rootfs.tar.xz -C \
-    /root-out && \
+  mkdir -p "$ROOTFS/etc/apk" && \
+  { \
+    echo "$MIRROR/$REL/main"; \
+    echo "$MIRROR/$REL/community"; \
+  } > "$ROOTFS/etc/apk/repositories" && \
+  apk --root "$ROOTFS" --no-cache --keys-dir /etc/apk/keys add --arch $ARCH --initdb ${PACKAGES//,/ } && \
   sed -i -e 's/^root::/root:!:/' /root-out/etc/shadow
 
 # set version for s6 overlay
@@ -78,7 +72,6 @@ RUN \
     coreutils \
     curl \
     jq \
-    procps \
     shadow \
     tzdata && \
   echo "**** create abc user and make our folders ****" && \

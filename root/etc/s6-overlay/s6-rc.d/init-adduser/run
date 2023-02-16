@@ -52,6 +52,6 @@ Apps will not behave correctly without this
     sleep infinity
 fi
 
-chown abc:abc /app
-chown abc:abc /config
-chown abc:abc /defaults
+lsiown abc:abc /app
+lsiown abc:abc /config
+lsiown abc:abc /defaults
