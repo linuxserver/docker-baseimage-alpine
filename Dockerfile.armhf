@@ -72,7 +72,6 @@ RUN \
     coreutils \
     curl \
     jq \
-    procps \
     shadow \
     tzdata && \
   echo "**** create abc user and make our folders ****" && \
