@@ -7,19 +7,8 @@ PGID=${PGID:-911}
 groupmod -o -g "$PGID" abc
 usermod -o -u "$PUID" abc
 
-echo "
-───────────────────────────────────────
-  _____ __ __ _____ _____ _____ _____ 
- |     |  |  |   __|_   _|     |     |
- |   --|  |  |__   | | | |  |  | | | |
- |_____|_____|_____| |_| |_____|_|_|_|
-       _____ __ __ _ __    ____  
-      | __  |  |  | |  |  |    \ 
-      | __ -|  |  | |  |__|  |  |
-      |_____|_____|_|_____|____/ 
+cat /etc/s6-overlay/s6-rc.d/init-adduser/branding
 
-  Based on images from linuxserver.io
-───────────────────────────────────────"
 if [[ -f /donate.txt ]]; then
     echo '
 To support the app dev(s) visit:'
