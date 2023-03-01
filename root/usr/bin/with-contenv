@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [[ -f /run/s6/container_environment/UMASK ]] &&
-    { [[ "$(pwdx $$)" =~ "/run/s6/legacy-services/" ]] ||
-        [[ "$(pwdx $$)" =~ "/run/s6/services/" ]] ||
-        [[ "$(pwdx $$)" =~ "/servicedirs/svc-" ]]; }; then
-    umask "$(cat /run/s6/container_environment/UMASK)"
-fi
-exec /command/with-contenv "$@"
