@@ -79,7 +79,7 @@ RUN \
     coreutils \
     curl \
     jq \
-    procps \
+    netcat-openbsd \
     shadow \
     tzdata && \
   echo "**** create abc user and make our folders ****" && \
