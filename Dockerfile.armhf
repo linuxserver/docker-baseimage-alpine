@@ -78,6 +78,7 @@ RUN \
     coreutils \
     curl \
     jq \
+    netcat-openbsd \
     procps \
     shadow \
     tzdata && \
