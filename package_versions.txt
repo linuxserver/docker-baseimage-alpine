@@ -20,8 +20,8 @@ libproc                 3.3.17-r0         apk
 libretls                3.3.4-r3          apk     
 libssl1.1               1.1.1t-r3         apk     
 linux-pam               1.5.2-r0          apk     
-musl                    1.2.2-r8          apk     
-musl-utils              1.2.2-r8          apk     
+musl                    1.2.2-r9          apk     
+musl-utils              1.2.2-r9          apk     
 ncurses-libs            6.3_p20211120-r1  apk     
 ncurses-terminfo-base   6.3_p20211120-r1  apk     
 nghttp2-libs            1.46.0-r0         apk     
