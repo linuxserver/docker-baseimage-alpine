@@ -13,4 +13,5 @@ jobs:
         if: github.ref == 'refs/heads/3.16'
         run: |
           echo "**** No external release, exiting ****"
+          echo "No external release, exiting" >> $GITHUB_STEP_SUMMARY
           exit 0
