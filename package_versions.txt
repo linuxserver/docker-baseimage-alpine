@@ -6,8 +6,8 @@ bash                    5.1.16-r0         apk
 brotli-libs             1.0.9-r5          apk     
 busybox                 1.33.1            binary  
 busybox                 1.33.1-r8         apk     
-ca-certificates         20220614-r0       apk     
-ca-certificates-bundle  20220614-r0       apk     
+ca-certificates         20230506-r0       apk     
+ca-certificates-bundle  20230506-r0       apk     
 coreutils               8.32-r2           apk     
 curl                    8.0.1-r0          apk     
 libacl                  2.2.53-r0         apk     
