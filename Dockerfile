@@ -30,7 +30,7 @@ RUN \
   sed -i -e 's/^root::/root:!:/' /root-out/etc/shadow
 
 # set version for s6 overlay
-ARG S6_OVERLAY_VERSION="3.1.2.1"
+ARG S6_OVERLAY_VERSION="3.1.5.0"
 ARG S6_OVERLAY_ARCH="x86_64"
 
 # add s6 overlay
@@ -58,11 +58,13 @@ ADD --chmod=744 "https://raw.githubusercontent.com/linuxserver/docker-mods/mod-s
 
 # environment variables
 ENV PS1="$(whoami)@$(hostname):$(pwd)\\$ " \
-HOME="/root" \
-TERM="xterm" \
-S6_CMD_WAIT_FOR_SERVICES_MAXTIME="0" \
-S6_VERBOSITY=1 \
-S6_STAGE2_HOOK=/docker-mods
+  HOME="/root" \
+  TERM="xterm" \
+  S6_CMD_WAIT_FOR_SERVICES_MAXTIME="0" \
+  S6_VERBOSITY=1 \
+  S6_STAGE2_HOOK=/docker-mods \
+  VIRTUAL_ENV=/lsiopy \
+  PATH="/lsiopy/bin:$PATH"
 
 RUN \
   echo "**** install runtime packages ****" && \
@@ -83,7 +85,8 @@ RUN \
   mkdir -p \
     /app \
     /config \
-    /defaults && \
+    /defaults \
+    /lsiopy && \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*
