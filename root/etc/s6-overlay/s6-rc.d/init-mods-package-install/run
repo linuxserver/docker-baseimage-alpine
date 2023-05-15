@@ -1,6 +1,17 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+if [[ -f "/mod-pip-packages-to-install.list" ]]; then
+    IFS=' ' read -ra PIP_PACKAGES <<< "$(tr '\n' ' ' < /mod-pip-packages-to-install.list)"
+    if [[ ${#PIP_PACKAGES[@]} -ne 0 ]] && [[ ${PIP_PACKAGES[*]} != "" ]]; then
+        if [[ -f /usr/bin/apt ]]; then
+            echo "python3-venv" >> /mod-repo-packages-to-install.list
+        elif [[ -f /sbin/apk ]]; then
+            echo "python3" >> /mod-repo-packages-to-install.list
+        fi
+    fi
+fi
+
 if [[ -f "/mod-repo-packages-to-install.list" ]]; then
     IFS=' ' read -ra REPO_PACKAGES <<< "$(tr '\n' ' ' < /mod-repo-packages-to-install.list)"
     if [[ ${#REPO_PACKAGES[@]} -ne 0 ]] && [[ ${REPO_PACKAGES[*]} != "" ]]; then
@@ -21,6 +32,10 @@ if [[ -f "/mod-pip-packages-to-install.list" ]]; then
     IFS=' ' read -ra PIP_PACKAGES <<< "$(tr '\n' ' ' < /mod-pip-packages-to-install.list)"
     if [[ ${#PIP_PACKAGES[@]} -ne 0 ]] && [[ ${PIP_PACKAGES[*]} != "" ]]; then
         echo "[mod-init] **** Installing all pip packages ****"
+        if [[ ! -d /lsiopy/bin ]]; then
+            echo "**** Creating venv ****"
+            python3 -m venv /lsiopy
+        fi
         python3 -m pip install -U pip wheel setuptools
         PIP_ARGS=()
         if [[ -f /usr/bin/apt ]]; then
