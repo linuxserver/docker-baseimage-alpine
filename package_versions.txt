@@ -10,7 +10,8 @@ busybox                 1.36.0-r11        apk
 busybox-binsh           1.36.0-r11        apk     
 ca-certificates         20230506-r0       apk     
 ca-certificates-bundle  20230506-r0       apk     
-coreutils               9.3-r1            apk     
+coreutils               9.3-r2            apk     
+coreutils-env           9.3-r2            apk     
 curl                    8.0.1-r3          apk     
 jq                      1.6-r3            apk     
 libacl                  2.3.1-r4          apk     
@@ -20,7 +21,7 @@ libc-utils              0.7.2-r5          apk
 libcrypto3              3.1.0-r5          apk     
 libcurl                 8.0.1-r3          apk     
 libidn2                 2.3.4-r2          apk     
-libintl                 0.21.1-r6         apk     
+libintl                 0.21.1-r8         apk     
 libmd                   1.0.4-r2          apk     
 libncursesw             6.4_p20230514-r0  apk     
 libproc2                4.0.3-r2          apk     
