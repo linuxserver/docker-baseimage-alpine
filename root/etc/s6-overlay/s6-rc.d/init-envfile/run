@@ -9,6 +9,9 @@ if find /run/s6/container_environment/*"FILE__"* -maxdepth 1 > /dev/null 2>&1; t
                 FILESTRIP=${FILENAME//FILE__/}
                 cat "${SECRETFILE}" >"${FILESTRIP}"
                 echo "[env-init] ${FILESTRIP##*/} set from ${FILENAME##*/}"
+                if [[ $(tail -c 1 ${SECRETFILE} | wc -l) -gt 0 ]]; then
+                    echo "[env-init] The file ${SECRETFILE} contains a trailing newline, which may result in the set var not working as expected. Please confirm the trailing newline is intentional."
+                fi
             else
                 echo "[env-init] cannot find secret in ${FILENAME##*/}"
             fi
