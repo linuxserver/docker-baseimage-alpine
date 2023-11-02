@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 
 if find /run/s6/container_environment/FILE__* -maxdepth 1 > /dev/null 2>&1; then
-    for FILENAME in /run/s6/container_environment/*; do
+    for FILENAME in /run/s6/container_environment/FILE__*; do
             SECRETFILE=$(cat "${FILENAME}")
             if [[ -f ${SECRETFILE} ]]; then
                 FILESTRIP=${FILENAME//FILE__/}
