@@ -28,7 +28,7 @@ musl-utils              1.2.3-r3          apk
 ncurses-libs            6.3_p20220521-r1  apk   
 ncurses-terminfo-base   6.3_p20220521-r1  apk   
 netcat-openbsd          1.130-r3          apk   
-nghttp2-libs            1.47.0-r1         apk   
+nghttp2-libs            1.47.0-r2         apk   
 oniguruma               6.9.8-r0          apk   
 procps                  3.3.17-r1         apk   
 readline                8.1.2-r0          apk   
