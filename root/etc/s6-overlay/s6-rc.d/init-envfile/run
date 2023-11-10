@@ -1,17 +1,19 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-if find /run/s6/container_environment/*"FILE__"* -maxdepth 1 > /dev/null 2>&1; then
-    for FILENAME in /run/s6/container_environment/*; do
-        if [[ "${FILENAME##*/}" == "FILE__"* ]]; then
+if find /run/s6/container_environment/FILE__* -maxdepth 1 > /dev/null 2>&1; then
+    for FILENAME in /run/s6/container_environment/FILE__*; do
             SECRETFILE=$(cat "${FILENAME}")
             if [[ -f ${SECRETFILE} ]]; then
                 FILESTRIP=${FILENAME//FILE__/}
-                cat "${SECRETFILE}" >"${FILESTRIP}"
+                if [[ ${SECRET_NO_SANITIZE,,} = "true" ]]; then
+                    cat "${SECRETFILE}" >"${FILESTRIP}"
+                else
+                    tr -d '\n' < "${SECRETFILE}" >"${FILESTRIP}"
+                fi
                 echo "[env-init] ${FILESTRIP##*/} set from ${FILENAME##*/}"
             else
                 echo "[env-init] cannot find secret in ${FILENAME##*/}"
             fi
-        fi
     done
 fi
