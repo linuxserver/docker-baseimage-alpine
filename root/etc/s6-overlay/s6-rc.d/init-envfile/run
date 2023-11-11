@@ -6,11 +6,11 @@ if find /run/s6/container_environment/FILE__* -maxdepth 1 > /dev/null 2>&1; then
             SECRETFILE=$(cat "${FILENAME}")
             if [[ -f ${SECRETFILE} ]]; then
                 FILESTRIP=${FILENAME//FILE__/}
-                if [[ ${SECRET_NO_SANITIZE,,} = "true" ]]; then
-                    cat "${SECRETFILE}" >"${FILESTRIP}"
-                else
-                    tr -d '\n' < "${SECRETFILE}" >"${FILESTRIP}"
+                if [[ $(tail -n1 "${SECRETFILE}" | wc -l) = 1 ]]; then
+                    echo "[env-init] Your secret: ${FILENAME##*/}"
+                    echo "           contains a trailing newline and may not work as expected"
                 fi
+                cat "${SECRETFILE}" >"${FILESTRIP}"
                 echo "[env-init] ${FILESTRIP##*/} set from ${FILENAME##*/}"
             else
                 echo "[env-init] cannot find secret in ${FILENAME##*/}"
