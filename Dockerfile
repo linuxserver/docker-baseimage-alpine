@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
-FROM alpine:3.17 as rootfs-stage
+FROM alpine:3.18 as rootfs-stage
 
 # environment
 ENV ROOTFS=/root-out
-ENV REL=v3.18
+ENV REL=v3.19
 ENV ARCH=x86_64
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\
@@ -30,7 +30,7 @@ RUN \
   sed -i -e 's/^root::/root:!:/' /root-out/etc/shadow
 
 # set version for s6 overlay
-ARG S6_OVERLAY_VERSION="3.1.5.0"
+ARG S6_OVERLAY_VERSION="3.1.6.2"
 ARG S6_OVERLAY_ARCH="x86_64"
 
 # add s6 overlay
