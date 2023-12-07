@@ -6,7 +6,6 @@ external_type: os
 release_type: prerelease
 release_tag: "3.18"
 ls_branch: "3.18"
-build_armhf: false
 repo_vars:
   - BUILD_VERSION_ARG = 'OS'
   - LS_USER = 'linuxserver'
