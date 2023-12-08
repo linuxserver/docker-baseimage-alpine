@@ -4,9 +4,8 @@
 project_name: docker-baseimage-alpine
 external_type: os
 release_type: stable
-release_tag: "3.18"
+release_tag: "3.19"
 ls_branch: master
-build_armhf: false
 repo_vars:
   - BUILD_VERSION_ARG = 'OS'
   - LS_USER = 'linuxserver'
