@@ -12,7 +12,7 @@ ca-certificates         20230506-r0       apk
 ca-certificates-bundle  20230506-r0       apk   
 coreutils               9.3-r1            apk   
 curl                    8.5.0-r0          apk   
-jq                      1.6-r3            apk   
+jq                      1.6-r4            apk   
 libacl                  2.3.1-r3          apk   
 libattr                 2.5.1-r4          apk   
 libbsd                  0.11.7-r1         apk   
