@@ -2,10 +2,11 @@
 
 FROM alpine:3.18 as rootfs-stage
 
+ARG TARGETARCH
+
 # environment
 ENV ROOTFS=/root-out
 ENV REL=v3.19
-ENV ARCH=x86_64
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\
 alpine-keys,\
@@ -17,7 +18,8 @@ libc-utils
 RUN \
   apk add --no-cache \
     bash \
-    xz
+    xz \
+    curl
 
 # build rootfs
 RUN \
@@ -26,18 +28,26 @@ RUN \
     echo "$MIRROR/$REL/main"; \
     echo "$MIRROR/$REL/community"; \
   } > "$ROOTFS/etc/apk/repositories" && \
-  apk --root "$ROOTFS" --no-cache --keys-dir /etc/apk/keys add --arch $ARCH --initdb ${PACKAGES//,/ } && \
+  apk --root "$ROOTFS" --no-cache --keys-dir /etc/apk/keys add --initdb ${PACKAGES//,/ } && \
   sed -i -e 's/^root::/root:!:/' /root-out/etc/shadow
 
 # set version for s6 overlay
 ARG S6_OVERLAY_VERSION="3.1.6.2"
-ARG S6_OVERLAY_ARCH="x86_64"
 
 # add s6 overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
 RUN tar -C /root-out -Jxpf /tmp/s6-overlay-noarch.tar.xz
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
-RUN tar -C /root-out -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
+
+RUN \
+  if [ "$TARGETARCH" = "arm64" ]; \
+    then export S6_OVERLAY_ARCH="aarch64"; \
+  else \
+    export S6_OVERLAY_ARCH=$TARGETARCH; \
+  fi && \
+    curl -sS -L -O --output-dir /tmp/ --create-dirs \
+    https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz && \
+    tar -C /root-out -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz && \
+    apk del curl
 
 # add s6 optional symlinks
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-symlinks-noarch.tar.xz /tmp
