@@ -12,9 +12,7 @@
 
 | File | Use case |
 | :----: | --- |
-| `Dockerfile` | Dockerfile used to build amd64 images |
-| `Dockerfile.aarch64` | Dockerfile used to build 64bit ARM architectures |
-| `Dockerfile.armhf` | Dockerfile used to build 32bit ARM architectures |
+| `Dockerfile` | Dockerfile used to build images |
 | `Jenkinsfile` | This file is a product of our builder and should not be edited directly. This is used to build the image |
 | `jenkins-vars.yml` | This file is used to generate the `Jenkinsfile` mentioned above, it only affects the build-process |
 | `package_versions.txt` | This file is generated as a part of the build-process and should not be edited directly. It lists all the installed packages and their versions |
@@ -105,13 +103,17 @@ docker build \
   -t linuxserver/baseimage-alpine:latest .
 ```
 
-The ARM variants can be built on x86_64 hardware using `multiarch/qemu-user-static`
+The ARM variants can be built on other platform hardware using buildx
 
 ```bash
-docker run --rm --privileged multiarch/qemu-user-static:register --reset
+docker buildx build --platform linux/arm64 --no-cache --pull -t linuxserver/baseimage-alpine:latest .
 ```
 
-Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64`.
+To run the image
+
+```bash
+docker run -it --rm --platform linux/arm64 linuxserver/baseimage-alpine:latest
+```
 
 ## Update the changelog
 
