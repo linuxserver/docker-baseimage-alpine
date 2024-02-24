@@ -7,7 +7,7 @@ jobs:
   external-trigger-3-18:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v4.1.1
 
       - name: External Trigger
         if: github.ref == 'refs/heads/3.18'
