@@ -3,7 +3,7 @@ alpine-baselayout       3.4.0-r0          apk
 alpine-baselayout-data  3.4.0-r0          apk     
 alpine-keys             2.4-r1            apk     
 alpine-release          3.17.7-r0         apk     
-apk-tools               2.12.13-r1        apk     
+apk-tools               2.12.14-r0        apk     
 bash                    5.2.15-r0         apk     
 brotli-libs             1.0.9-r9          apk     
 busybox                 1.35.0-r29        apk     
@@ -12,6 +12,7 @@ ca-certificates         20240226-r0       apk
 ca-certificates-bundle  20240226-r0       apk     
 coreutils               9.1-r0            apk     
 curl                    8.5.0-r0          apk     
+findutils               4.9.0-r3          apk     
 jq                      1.6-r2            apk     
 libacl                  2.3.1-r1          apk     
 libattr                 2.5.1-r2          apk     
