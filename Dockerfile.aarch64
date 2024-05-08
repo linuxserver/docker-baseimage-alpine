@@ -74,6 +74,7 @@ RUN \
     alpine-release \
     bash \
     ca-certificates \
+    catatonit \
     coreutils \
     curl \
     findutils \
