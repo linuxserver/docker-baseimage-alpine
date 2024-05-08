@@ -73,6 +73,7 @@ RUN \
   apk add --no-cache \
     bash \
     ca-certificates \
+    catatonit \
     coreutils \
     curl \
     findutils \
