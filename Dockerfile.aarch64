@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
-FROM alpine:3.18 as rootfs-stage
+FROM alpine:3.19 as rootfs-stage
 
 # environment
 ENV ROOTFS=/root-out
-ENV REL=v3.19
+ENV REL=v3.20
 ENV ARCH=aarch64
 ENV MIRROR=http://dl-cdn.alpinelinux.org/alpine
 ENV PACKAGES=alpine-baselayout,\
