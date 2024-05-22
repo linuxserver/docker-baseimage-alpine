@@ -92,6 +92,7 @@ RUN \
     /config \
     /defaults \
     /lsiopy && \
+  printf "Linuxserver.io version: ${VERSION}\nBuild-date: ${BUILD_DATE}" > /build_version && \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*
