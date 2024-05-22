@@ -92,7 +92,7 @@ RUN \
     /config \
     /defaults \
     /lsiopy && \
-    echo "**** cleanup ****" && \
+  echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*
 
