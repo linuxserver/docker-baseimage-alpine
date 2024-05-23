@@ -24,8 +24,13 @@ GID/UID
 echo "
 User UID:    $(id -u abc)
 User GID:    $(id -g abc)
+───────────────────────────────────────"
+if [[ -f /build_version ]]; then
+    cat /build_version
+    echo '
 ───────────────────────────────────────
-"
+    '
+fi
 
 lsiown abc:abc /app
 lsiown abc:abc /config
