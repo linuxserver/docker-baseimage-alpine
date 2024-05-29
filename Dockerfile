@@ -77,6 +77,7 @@ RUN \
     ca-certificates \
     coreutils \
     curl \
+    find \
     jq \
     netcat-openbsd \
     procps \
