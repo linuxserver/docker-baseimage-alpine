@@ -7,7 +7,9 @@ PGID=${PGID:-911}
 if [[ -z ${LSIO_READ_ONLY_FS} ]] && [[ -z ${LSIO_NON_ROOT_USER} ]]; then
     groupmod -o -g "$PGID" abc
     usermod -o -u "$PUID" abc
+fi
 
+if { [[ -z ${LSIO_READ_ONLY_FS} ]] && [[ -z ${LSIO_NON_ROOT_USER} ]]; } || [[ ! ${LSIO_FIRST_PARTY} = "true" ]]; then
     cat /etc/s6-overlay/s6-rc.d/init-adduser/branding
 else
     cat /run/branding
