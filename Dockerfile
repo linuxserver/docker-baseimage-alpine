@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM alpine:3.19 as rootfs-stage
+FROM alpine:3.19 AS rootfs-stage
 
 # environment
 ENV ROOTFS=/root-out
