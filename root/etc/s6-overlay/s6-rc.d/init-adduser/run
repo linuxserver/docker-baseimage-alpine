@@ -4,10 +4,16 @@
 PUID=${PUID:-911}
 PGID=${PGID:-911}
 
-groupmod -o -g "$PGID" abc
-usermod -o -u "$PUID" abc
+if [[ -z ${LSIO_READ_ONLY_FS} ]] && [[ -z ${LSIO_NON_ROOT_USER} ]]; then
+    groupmod -o -g "$PGID" abc
+    usermod -o -u "$PUID" abc
+fi
 
-cat /etc/s6-overlay/s6-rc.d/init-adduser/branding
+if { [[ -z ${LSIO_READ_ONLY_FS} ]] && [[ -z ${LSIO_NON_ROOT_USER} ]]; } || [[ ! ${LSIO_FIRST_PARTY} = "true" ]]; then
+    cat /etc/s6-overlay/s6-rc.d/init-adduser/branding
+else
+    cat /run/branding
+fi
 
 if [[ -f /donate.txt ]]; then
     echo '
@@ -21,10 +27,17 @@ https://www.linuxserver.io/donate/
 ───────────────────────────────────────
 GID/UID
 ───────────────────────────────────────'
+if [[ -z ${LSIO_NON_ROOT_USER} ]]; then
 echo "
 User UID:    $(id -u abc)
 User GID:    $(id -g abc)
 ───────────────────────────────────────"
+else
+echo "
+User UID:    $(stat /run -c %u)
+User GID:    $(stat /run -c %g)
+───────────────────────────────────────"
+fi
 if [[ -f /build_version ]]; then
     cat /build_version
     echo '
@@ -32,6 +45,8 @@ if [[ -f /build_version ]]; then
     '
 fi
 
-lsiown abc:abc /app
-lsiown abc:abc /config
-lsiown abc:abc /defaults
+if [[ -z ${LSIO_READ_ONLY_FS} ]] && [[ -z ${LSIO_NON_ROOT_USER} ]]; then
+    lsiown abc:abc /app
+    lsiown abc:abc /config
+    lsiown abc:abc /defaults
+fi
