@@ -53,6 +53,7 @@ ARG VERSION
 ARG MODS_VERSION="v3"
 ARG PKG_INST_VERSION="v1"
 ARG LSIOWN_VERSION="v1"
+ARG WITHCONTENV_VERSION="v1"
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="TheLamer"
 
