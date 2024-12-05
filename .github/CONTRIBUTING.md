@@ -24,7 +24,7 @@
 ## Readme
 
 If you would like to change our readme, please __**do not**__ directly edit the readme, as it is auto-generated on each commit.
-Instead edit the [readme-vars.yml](https://github.com/linuxserver/docker-baseimage-alpine/edit/master/readme-vars.yml).
+Instead edit the [readme-vars.yml](https://github.com/linuxserver/docker-baseimage-alpine/edit/3.20/readme-vars.yml).
 
 These variables are used in a template for our [Jenkins Builder](https://github.com/linuxserver/docker-jenkins-builder) as part of an ansible play.
 Most of these variables are also carried over to [docs.linuxserver.io](https://docs.linuxserver.io)
@@ -105,17 +105,17 @@ docker build \
   -t linuxserver/baseimage-alpine:latest .
 ```
 
-The ARM variants can be built on x86_64 hardware using `multiarch/qemu-user-static`
+The ARM variants can be built on x86_64 hardware and vice versa using `lscr.io/linuxserver/qemu-static`
 
 ```bash
-docker run --rm --privileged multiarch/qemu-user-static:register --reset
+docker run --rm --privileged lscr.io/linuxserver/qemu-static --reset
 ```
 
 Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64`.
 
 ## Update the changelog
 
-If you are modifying the Dockerfiles or any of the startup scripts in [root](https://github.com/linuxserver/docker-baseimage-alpine/tree/master/root), add an entry to the changelog
+If you are modifying the Dockerfiles or any of the startup scripts in [root](https://github.com/linuxserver/docker-baseimage-alpine/tree/3.20/root), add an entry to the changelog
 
 ```yml
 changelogs:
