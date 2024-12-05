@@ -18,7 +18,6 @@ for MIGRATION in $(find ${MIGRATIONS_DIR}/* | sort -n); do
         continue
     fi
     echo "[migrations] ${NAME}: executing..."
-    chmod +x "${MIGRATION}"
     # Execute migration script in a subshell to prevent it from modifying the current environment
     ("${MIGRATION}")
     EXIT_CODE=$?
