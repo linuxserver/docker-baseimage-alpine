@@ -4,29 +4,21 @@
 project_name: baseimage-alpine
 full_custom_readme: |
   {% raw -%}
-  [linuxserverurl]: https://linuxserver.io
-  [forumurl]: https://forum.linuxserver.io
-  [ircurl]: https://mibbit.com/?server=irc.libera.chat&channel=%23linuxserver.io
-  [appurl]: https://alpinelinux.org
-
-  [![linuxserver.io](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver_medium.png?v=4&s=4000)][linuxserverurl]
+  [![linuxserver.io](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver_medium.png)](https://linuxserver.io)
 
   ## Contact information:-
 
   | Type | Address/Details |
   | :---: | --- |
-  | Discord | [Discord](https://discord.gg/YWrKVTn) |
-  | IRC | libera at `#linuxserver.io` more information at:- [IRC][ircurl]
-  | Forum | [LinuxServer.io forum][forumurl] |
+  | Discord | [Discord](https://linuxserver.io/discord) |
+  | IRC | `#linuxserver.io` on irc.libera.chat |
+  | Forum | [Discourse](https://discourse.linuxserver.io/) |
 
-  &nbsp;
-  &nbsp;
+  A custom base image built with [Alpine Linux](https://alpinelinux.org) and [s6-overlay](https://github.com/just-containers/s6-overlay).
 
-  [![](https://images.microbadger.com/badges/image/lsiobase/alpine.svg)](https://microbadger.com/images/lsiobase/alpine "Get your own image badge on microbadger.com")
-
-  [![](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/Dockerfile-Link-green.png)](https://github.com/linuxserver/docker-baseimage-alpine/blob/master/Dockerfile)
-
-  A custom base image built with [Alpine linux][appurl] and [S6 overlay](https://github.com/just-containers/s6-overlay)..
+  - Support for using our base images in your own projects is provided on a Reasonable Endeavours basis, please see our [Support Policy](https://www.linuxserver.io/supportpolicy) for details.
+  - There is no `latest` tag for any of our base images, by design. We often make breaking changes between versions, and we don't publish release notes like we do for the downstream images.
+  - If you're intending to distribute an image using one of our bases, please read our [docs on container branding](https://docs.linuxserver.io/general/container-branding/) first.
 
   The following line is only in this repo for loop testing:
 
