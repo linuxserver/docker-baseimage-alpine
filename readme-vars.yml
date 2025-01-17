@@ -19,7 +19,7 @@ full_custom_readme: |
   - Support for using our base images in your own projects is provided on a Reasonable Endeavours basis, please see our [Support Policy](https://www.linuxserver.io/supportpolicy) for details.
   - There is no `latest` tag for any of our base images, by design. We often make breaking changes between versions, and we don't publish release notes like we do for the downstream images.
   - If you're intending to distribute an image using one of our bases, please read our [docs on container branding](https://docs.linuxserver.io/general/container-branding/) first.
-  - Alpine releases are supported for 2 years, after which we will stop building new base images based on that version.
+  - Alpine releases are supported for 2 years, after which we will stop building new base images for that version.
 
   The following line is only in this repo for loop testing:
 
