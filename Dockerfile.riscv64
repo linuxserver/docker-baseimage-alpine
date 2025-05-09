@@ -95,11 +95,6 @@ RUN \
     /config \
     /defaults \
     /lsiopy && \
-  echo "**** add qemu ****" && \
-  curl -o \
-    /usr/bin/qemu-riscv64-static -L \
-    "https://lsio-ci.ams3.digitaloceanspaces.com/qemu-riscv64-static" && \
-  chmod +x /usr/bin/qemu-riscv64-static && \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*
