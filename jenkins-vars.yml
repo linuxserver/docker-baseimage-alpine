@@ -4,10 +4,9 @@
 project_name: docker-baseimage-alpine
 external_type: os
 release_type: stable
-release_tag: "3.21"
+release_tag: "3.22"
 ls_branch: master
-image_sbom: true
-image_provenance: true
+build_riscv64: true
 repo_vars:
   - BUILD_VERSION_ARG = 'OS'
   - LS_USER = 'linuxserver'
