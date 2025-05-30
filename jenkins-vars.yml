@@ -6,8 +6,6 @@ external_type: os
 release_type: prerelease
 release_tag: "3.21"
 ls_branch: "3.21"
-image_sbom: true
-image_provenance: true
 repo_vars:
   - BUILD_VERSION_ARG = 'OS'
   - LS_USER = 'linuxserver'
