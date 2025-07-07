@@ -1,0 +1,60 @@
+name: Build and Release Docker Images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Find all Dockerfiles
+        id: find_dockerfiles
+        run: |
+          find . -type f -iname 'Dockerfile' > dockerfiles.txt
+          cat dockerfiles.txt
+
+      - name: Build Docker images and save as tarballs
+        id: build_save
+        run: |
+          mkdir -p docker-images
+          i=0
+          while IFS= read -r dockerfile; do
+            dir=$(dirname "$dockerfile")
+            image_name="image_$i"
+            tag="release-${{ github.run_number }}-$i"
+            tar_name="docker-image-$i.tar"
+            echo "Building $image_name from $dockerfile"
+            docker build -f "$dockerfile" -t "$image_name:$tag" "$dir"
+            docker save -o "docker-images/$tar_name" "$image_name:$tag"
+            echo "Saved docker-images/$tar_name"
+            echo "TAR_PATH_$i=docker-images/$tar_name" >> $GITHUB_ENV
+            ((i++))
+          done < dockerfiles.txt
+          echo "BUILT_IMAGES=$i" >> $GITHUB_ENV
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: docker-release-${{ github.run_number }}
+          name: Docker Release ${{ github.run_number }}
+          body: |
+            Automated release of all Docker images built from all Dockerfiles found in the repository.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Docker image tarballs to Release
+        run: |
+          for tar in docker-images/*.tar; do
+            gh release upload ${{ steps.create_release.outputs.tag_name }} "$tar"
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
