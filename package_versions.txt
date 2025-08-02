@@ -33,8 +33,8 @@ libpsl                  0.21.5-r3                 apk
 libssl3                 3.5.1-r0                  apk     
 libunistring            1.3-r0                    apk     
 linux-pam               1.7.0-r4                  apk     
-musl                    1.2.5-r14                 apk     
-musl-utils              1.2.5-r14                 apk     
+musl                    1.2.5-r17                 apk     
+musl-utils              1.2.5-r17                 apk     
 ncurses-terminfo-base   6.5_p20250705-r0          apk     
 netcat-openbsd          1.229.1-r0                apk     
 nghttp2-libs            1.66.0-r0                 apk     
@@ -48,4 +48,4 @@ ssl_client              1.37.0-r21                apk
 tzdata                  2025b-r0                  apk     
 utmps-libs              0.1.3.1-r0                apk     
 zlib                    1.3.1-r2                  apk     
-zstd-libs               1.5.7-r1                  apk     
+zstd-libs               1.5.7-r2                  apk     
