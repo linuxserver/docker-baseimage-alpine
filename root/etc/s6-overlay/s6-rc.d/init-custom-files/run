@@ -9,12 +9,12 @@ if [[ -e "${SCRIPTS_DIR}" ]] && [[ -n "$(/bin/ls -A ${SCRIPTS_DIR} 2>/dev/null)"
     echo "[custom-init] Files found, executing"
     for SCRIPT in "${SCRIPTS_DIR}"/*; do
         NAME="$(basename "${SCRIPT}")"
-        if [[ -f "${SCRIPT}" ]]; then
+        if [[ -x "${SCRIPT}" ]]; then
             echo "[custom-init] ${NAME}: executing..."
             /bin/bash "${SCRIPT}"
             echo "[custom-init] ${NAME}: exited $?"
-        elif [[ ! -f "${SCRIPT}" ]]; then
-            echo "[custom-init] ${NAME}: is not a file"
+        elif [[ ! -x "${SCRIPT}" ]]; then
+            echo "[custom-init] ${NAME}: is not an executable file"
         fi
     done
 else
