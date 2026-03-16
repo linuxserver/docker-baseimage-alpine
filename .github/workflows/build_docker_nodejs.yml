@@ -1,4 +1,4 @@
-name: Build and Push Docker Image to GHCR
+name: Build Docker-Nodejs
 
 # 触发条件：推送到 main 分支 或 推送版本标签 (例如 v1.0.0)
 on:
