@@ -1,0 +1,73 @@
+name: Build and Push Docker Image to GHCR
+
+# 触发条件：推送到 main 分支 或 推送版本标签 (例如 v1.0.0)
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*.*.*" ]
+  # 允许手动触发
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  # 镜像名称会自动使用你的 GitHub 仓库名，格式为 ghcr.io/OWNER/REPO
+  IMAGE_NAME: ${{ github.repository }}-nodejs
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    # 关键：为 GITHUB_TOKEN 设置写 packages 的权限
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 设置 QEMU，为构建多架构镜像做准备（如 amd64, arm64）
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # 设置 Docker Buildx，这是使用高级构建功能（如缓存、多架构）的基础
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 登录到 GitHub Container Registry
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 提取 Docker 元数据，自动生成智能的 tags 和 labels
+      # 例如：推 main 分支会生成 tag `main`，推 v1.2.3 标签会生成 `v1.2.3` 和 `latest`
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=sha,format=short
+
+      # 构建并推送 Docker 镜像
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          # 指定 Dockerfile 路径，默认是 ./Dockerfile
+          file: ./Dockerfile-20.20-alpine3.23
+          # 是否推送，PR 事件通常不推送
+          push: true
+          # 使用上一步 meta 生成的 tags
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # 利用 GitHub Actions 缓存来加速构建
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # 如果需要构建多架构镜像，取消下面的注释并指定平台
+          # platforms: linux/amd64,linux/arm64
