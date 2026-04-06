@@ -9,6 +9,4 @@ if [[ -n ${DISABLE_PACKAGE_CACHE} ]]; then
         mkdir -p "/modcache/alpine/${ALPINE_VERSION}"
         ln -s "/modcache/alpine/${ALPINE_VERSION}" /etc/apk/cache
     fi
-
-    apk cache clean
 fi
