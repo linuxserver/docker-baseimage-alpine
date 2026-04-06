@@ -1,0 +1,14 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+if [[ -n ${DISABLE_PACKAGE_CACHE} ]]; then
+    # shellcheck source=/dev/null
+    ALPINE_VERSION=$(. /etc/os-release && echo "${VERSION_ID}" | grep -Eo '^\d\.\d+')
+
+    if [[ -n "${ALPINE_VERSION}" ]] && [[ ! -L /etc/apk/cache ]]; then
+        mkdir -p "/modcache/alpine/${ALPINE_VERSION}"
+        ln -s "/modcache/alpine/${ALPINE_VERSION}" /etc/apk/cache
+    fi
+
+    apk cache clean
+fi
