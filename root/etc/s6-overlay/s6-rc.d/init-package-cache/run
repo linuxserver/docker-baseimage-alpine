@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 
 if [[ -z ${LSIO_READ_ONLY_FS} ]] && [[ -z ${LSIO_NON_ROOT_USER} ]]; then
-    if [[ -n ${DISABLE_PACKAGE_CACHE} ]]; then
+    if [[ -n ${MOD_DISABLE_PACKAGE_CACHE} ]]; then
         if [[ -L $(which grep) ]]; then
             # BusyBox grep
             # shellcheck source=/dev/null

@@ -67,7 +67,7 @@ ENV PS1="$(whoami)@$(hostname):$(pwd)\\$ " \
   S6_STAGE2_HOOK=/docker-mods \
   VIRTUAL_ENV=/lsiopy \
   PATH="/lsiopy/bin:$PATH" \
-  DISABLE_PACKAGE_CACHE=false
+  MOD_DISABLE_PACKAGE_CACHE=false
 
 RUN \
   echo "**** install runtime packages ****" && \
