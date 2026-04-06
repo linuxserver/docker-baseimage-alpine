@@ -2,8 +2,16 @@
 # shellcheck shell=bash
 
 if [[ -n ${DISABLE_PACKAGE_CACHE} ]]; then
-    # shellcheck source=/dev/null
-    ALPINE_VERSION=$(. /etc/os-release && echo "${VERSION_ID}" | grep -Eo '^\d\.\d+')
+
+    if [[ -L $(which grep) ]]; then
+        # BusyBox grep
+        # shellcheck source=/dev/null
+        ALPINE_VERSION=$(. /etc/os-release && echo "${VERSION_ID}" | grep -Eo '^\d\.\d+')
+    else
+        # GNU grep
+        # shellcheck source=/dev/null
+        ALPINE_VERSION=$(. /etc/os-release && echo "${VERSION_ID}" | grep -Po '^\d\.\d+')
+    fi
 
     if [[ -n "${ALPINE_VERSION}" ]] && [[ ! -L /etc/apk/cache ]]; then
         mkdir -p "/modcache/alpine/${ALPINE_VERSION}"
