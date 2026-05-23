@@ -26,7 +26,7 @@ libcrypto3              3.5.6-r0          apk
 libcurl                 8.20.0-r1         apk     
 libidn2                 2.3.8-r0          apk     
 libintl                 1.0-r0            apk     
-libmd                   1.1.0-r0          apk     
+libmd                   1.2.0-r0          apk     
 libncursesw             6.6_p20260502-r0  apk     
 libproc2                4.0.6-r0          apk     
 libpsl                  0.21.5-r3         apk     
