@@ -978,7 +978,7 @@ pipeline {
                   "name": $tag_name,
                   "body": ("**CI Report:**\\n\\n" + $ci_url + "\\n\\n**LinuxServer Changes:**\\n\\n" + $ls_notes + "\\n\\n**Remote Changes:**\\n\\n" + $remote_notes),
                   "draft": false,
-                  "prerelease": false                }' > releasebody.json.done
+                  "prerelease": true                }' > releasebody.json.done
               curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST https://api.github.com/repos/${LS_USER}/${LS_REPO}/releases -d @releasebody.json.done
         '''
       }
