@@ -19,7 +19,7 @@ coreutils-fmt           9.7-r1            apk
 coreutils-sha512sum     9.7-r1            apk     
 curl                    8.14.1-r3         apk     
 findutils               4.10.0-r0         apk     
-jq                      1.8.1-r0          apk     
+jq                      1.8.2-r0          apk     
 libapk2                 2.14.10-r0        apk     
 libattr                 2.5.2-r2          apk     
 libbsd                  0.12.2-r0         apk     
